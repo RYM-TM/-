@@ -1,0 +1,52 @@
+{
+  "videos": [
+    {
+      "id": 1,
+      "title": "海边的日落",
+      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=beach%20sunset%20video%20thumbnail%20warm%20orange%20ocean%20waves%20romantic&image_size=landscape_16_9",
+      "src": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "date": "2024-09-10",
+      "description": "那天的日落特别美，我们在海边坐了好久好久。"
+    },
+    {
+      "id": 2,
+      "title": "城市夜景漫游",
+      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=city%20night%20lights%20video%20thumbnail%20warm%20street%20neon%20cozy&image_size=landscape_16_9",
+      "src": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "date": "2024-10-15",
+      "description": "深夜的城市，灯光璀璨，牵着你的手散步。"
+    },
+    {
+      "id": 3,
+      "title": "生日惊喜",
+      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=birthday%20cake%20candles%20video%20thumbnail%20warm%20celebration%20cozy&image_size=landscape_16_9",
+      "src": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "date": "2024-12-25",
+      "description": "你说这是你最难忘的一个生日。"
+    },
+    {
+      "id": 4,
+      "title": "春日野餐",
+      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=spring%20picnic%20grass%20flowers%20video%20thumbnail%20warm%20sunlight%20cozy&image_size=landscape_16_9",
+      "src": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "date": "2025-03-20",
+      "description": "春暖花开的日子，和你一起去公园野餐。"
+    },
+    {
+      "id": 5,
+      "title": "雨天的咖啡馆",
+      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=rainy%20cafe%20window%20video%20thumbnail%20warm%20indoor%20cozy%20atmosphere&image_size=landscape_16_9",
+      "src": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "date": "2025-04-10",
+      "description": "下雨天躲在咖啡馆里，听着雨声聊着天。"
+    },
+    {
+      "id": 6,
+      "title": "跨年烟花",
+      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=new%20year%20fireworks%20video%20thumbnail%20night%20sky%20warm%20celebration&image_size=landscape_16_9",
+      "src": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "date": "2025-01-01",
+      "description": "新的一年，我们还要继续在一起。"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>回忆墙 | 回忆收藏馆</title>
+  <meta name="description" content="时间线上的每一个节点，都是我们一起走过的痕迹">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    .chat-bubble {
+      background: var(--color-secondary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-md) var(--spacing-lg);
+      margin-bottom: var(--spacing-sm);
+      max-width: 85%;
+      position: relative;
+      line-height: 1.8;
+    }
+
+    .chat-bubble--left {
+      background: var(--color-bg-alt);
+      border-bottom-left-radius: 4px;
+    }
+
+    .chat-bubble--right {
+      background: var(--color-primary-light);
+      color: var(--color-text-primary);
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+
+    .timeline__images {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+
+    .timeline__images img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: transform var(--transition-base);
+    }
+
+    .timeline__images img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <nav class="navbar">
+      <div class="navbar__inner">
+        <a href="index.html" class="navbar__logo">回忆收藏馆</a>
+        <div class="navbar__menu">
+          <a href="index.html" class="navbar__link">首页</a>
+          <a href="quotes.html" class="navbar__link">文案馆</a>
+          <a href="memories.html" class="navbar__link active">回忆墙</a>
+          <a href="gallery.html" class="navbar__link">相册</a>
+          <a href="music.html" class="navbar__link">音乐台</a>
+          <a href="videos.html" class="navbar__link">视频集</a>
+        </div>
+        <button class="navbar__toggle" aria-label="菜单">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <main id="main-content" class="main-content">
+      <div class="container">
+        <header class="page-header animate-on-scroll">
+          <h1 class="page-title">💌 回忆墙</h1>
+          <p class="page-subtitle">时间线上的每一个节点，都是我们一起走过的痕迹</p>
+        </header>
+
+        <div class="timeline" id="timeline-container">
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>用心记录，用爱收藏 <span class="footer__heart">❤</span></p>
+        <p style="margin-top: var(--spacing-sm);">© 2024 回忆收藏馆 · 珍藏每一份美好</p>
+      </div>
+    </footer>
+
+    <button class="back-to-top" aria-label="回到顶部">↑</button>
+
+    <div class="player">
+      <div class="player__inner">
+        <div class="player__cover">
+          <img src="" alt="歌曲封面">
+        </div>
+        <div class="player__info">
+          <div class="player__title">暂无播放</div>
+          <div class="player__artist">--</div>
+        </div>
+        <div class="player__progress">
+          <div class="player__progress-bar">
+            <div class="player__progress-fill"></div>
+          </div>
+          <div class="player__time">
+            <span class="player__current-time">0:00</span>
+            <span class="player__total-time">0:00</span>
+          </div>
+        </div>
+        <div class="player__controls">
+          <button class="player__btn player__btn--prev" aria-label="上一首">&#9194;</button>
+          <button class="player__btn player__btn--play" aria-label="播放">&#9654;</button>
+          <button class="player__btn player__btn--next" aria-label="下一首">&#9193;</button>
+        </div>
+        <div class="player__volume">
+          <span class="player__volume-icon">&#128266;</span>
+          <input type="range" class="player__volume-slider" min="0" max="1" step="0.01" value="0.7">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils/data-loader.js"></script>
+  <script src="js/utils/scroll-animation.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/memories.js"></script>
+</body>
+</html>

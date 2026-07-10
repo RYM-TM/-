@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>相册 | 回忆收藏馆</title>
+  <meta name="description" content="镜头定格的不仅是画面，更是那一刻的心情">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    .album-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      justify-content: center;
+      margin-bottom: var(--spacing-3xl);
+    }
+
+    .album-tab {
+      padding: var(--spacing-md) var(--spacing-xl);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg-card);
+      border: 2px solid var(--color-border);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .album-tab:hover {
+      border-color: var(--color-primary-light);
+      transform: translateY(-2px);
+    }
+
+    .album-tab.active {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      border-color: var(--color-primary);
+      color: white;
+    }
+
+    .album-tab__cover {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      margin: 0 auto var(--spacing-sm);
+    }
+
+    .album-tab__name {
+      font-size: var(--font-size-sm);
+      font-family: var(--font-display);
+    }
+
+    .album-tab.active .album-tab__name {
+      color: white;
+    }
+
+    .masonry-grid {
+      column-count: 4;
+      column-gap: var(--spacing-lg);
+    }
+
+    @media (max-width: 1199px) {
+      .masonry-grid { column-count: 3; }
+    }
+
+    @media (max-width: 768px) {
+      .masonry-grid { column-count: 2; }
+    }
+
+    @media (max-width: 480px) {
+      .masonry-grid { column-count: 2; column-gap: var(--spacing-sm); }
+    }
+
+    .masonry-item {
+      break-inside: avoid;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .lightbox__counter {
+      position: absolute;
+      bottom: var(--spacing-xl);
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: var(--font-size-sm);
+      opacity: 0.8;
+    }
+
+    .lightbox__title {
+      position: absolute;
+      top: var(--spacing-xl);
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: var(--font-size-lg);
+      font-family: var(--font-display);
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <nav class="navbar">
+      <div class="navbar__inner">
+        <a href="index.html" class="navbar__logo">回忆收藏馆</a>
+        <div class="navbar__menu">
+          <a href="index.html" class="navbar__link">首页</a>
+          <a href="quotes.html" class="navbar__link">文案馆</a>
+          <a href="memories.html" class="navbar__link">回忆墙</a>
+          <a href="gallery.html" class="navbar__link active">相册</a>
+          <a href="music.html" class="navbar__link">音乐台</a>
+          <a href="videos.html" class="navbar__link">视频集</a>
+        </div>
+        <button class="navbar__toggle" aria-label="菜单">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <main id="main-content" class="main-content">
+      <div class="container">
+        <header class="page-header animate-on-scroll">
+          <h1 class="page-title">🖼️ 相册</h1>
+          <p class="page-subtitle">镜头定格的不仅是画面，更是那一刻的心情</p>
+        </header>
+
+        <div class="album-tabs animate-on-scroll" id="album-tabs">
+        </div>
+
+        <div class="masonry-grid" id="gallery-grid">
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>用心记录，用爱收藏 <span class="footer__heart">❤</span></p>
+        <p style="margin-top: var(--spacing-sm);">© 2024 回忆收藏馆 · 珍藏每一份美好</p>
+      </div>
+    </footer>
+
+    <button class="back-to-top" aria-label="回到顶部">↑</button>
+
+    <div class="lightbox" id="lightbox">
+      <button class="lightbox__close" id="lightbox-close" aria-label="关闭">✕</button>
+      <button class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" aria-label="上一张">‹</button>
+      <button class="lightbox__nav lightbox__nav--next" id="lightbox-next" aria-label="下一张">›</button>
+      <div class="lightbox__title" id="lightbox-title"></div>
+      <img class="lightbox__image" id="lightbox-image" src="" alt="">
+      <div class="lightbox__counter" id="lightbox-counter"></div>
+    </div>
+
+    <div class="player">
+      <div class="player__inner">
+        <div class="player__cover">
+          <img src="" alt="歌曲封面">
+        </div>
+        <div class="player__info">
+          <div class="player__title">暂无播放</div>
+          <div class="player__artist">--</div>
+        </div>
+        <div class="player__progress">
+          <div class="player__progress-bar">
+            <div class="player__progress-fill"></div>
+          </div>
+          <div class="player__time">
+            <span class="player__current-time">0:00</span>
+            <span class="player__total-time">0:00</span>
+          </div>
+        </div>
+        <div class="player__controls">
+          <button class="player__btn player__btn--prev" aria-label="上一首">&#9194;</button>
+          <button class="player__btn player__btn--play" aria-label="播放">&#9654;</button>
+          <button class="player__btn player__btn--next" aria-label="下一首">&#9193;</button>
+        </div>
+        <div class="player__volume">
+          <span class="player__volume-icon">&#128266;</span>
+          <input type="range" class="player__volume-slider" min="0" max="1" step="0.01" value="0.7">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils/data-loader.js"></script>
+  <script src="js/utils/scroll-animation.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/gallery.js"></script>
+</body>
+</html>

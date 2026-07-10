@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>视频集 | 回忆收藏馆</title>
+  <meta name="description" content="那些被记录下来的瞬间，是会流动的美好回忆">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    .video-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-xl);
+    }
+
+    .video-modal.active {
+      display: flex;
+    }
+
+    .video-modal__close {
+      position: absolute;
+      top: var(--spacing-xl);
+      right: var(--spacing-xl);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: var(--font-size-xl);
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+      z-index: 10;
+    }
+
+    .video-modal__close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .video-modal__content {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .video-modal__video {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      max-height: 70vh;
+    }
+
+    .video-modal__info {
+      margin-top: var(--spacing-lg);
+      color: white;
+      text-align: center;
+    }
+
+    .video-modal__title {
+      font-size: var(--font-size-xl);
+      font-family: var(--font-display);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .video-modal__date {
+      font-size: var(--font-size-sm);
+      opacity: 0.7;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .video-modal__desc {
+      font-size: var(--font-size-sm);
+      opacity: 0.8;
+      line-height: 1.8;
+    }
+
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--spacing-xl);
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <nav class="navbar">
+      <div class="navbar__inner">
+        <a href="index.html" class="navbar__logo">回忆收藏馆</a>
+        <div class="navbar__menu">
+          <a href="index.html" class="navbar__link">首页</a>
+          <a href="quotes.html" class="navbar__link">文案馆</a>
+          <a href="memories.html" class="navbar__link">回忆墙</a>
+          <a href="gallery.html" class="navbar__link">相册</a>
+          <a href="music.html" class="navbar__link">音乐台</a>
+          <a href="videos.html" class="navbar__link active">视频集</a>
+        </div>
+        <button class="navbar__toggle" aria-label="菜单">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <main id="main-content" class="main-content">
+      <div class="container">
+        <header class="page-header animate-on-scroll">
+          <h1 class="page-title">🎬 视频集</h1>
+          <p class="page-subtitle">那些被记录下来的瞬间，是会流动的美好回忆</p>
+        </header>
+
+        <div class="videos-grid" id="videos-grid">
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>用心记录，用爱收藏 <span class="footer__heart">❤</span></p>
+        <p style="margin-top: var(--spacing-sm);">© 2024 回忆收藏馆 · 珍藏每一份美好</p>
+      </div>
+    </footer>
+
+    <button class="back-to-top" aria-label="回到顶部">↑</button>
+
+    <div class="video-modal" id="video-modal">
+      <button class="video-modal__close" id="video-modal-close" aria-label="关闭">✕</button>
+      <div class="video-modal__content">
+        <video class="video-modal__video" id="video-modal-video" controls>
+          您的浏览器不支持视频播放。
+        </video>
+        <div class="video-modal__info">
+          <h3 class="video-modal__title" id="video-modal-title"></h3>
+          <p class="video-modal__date" id="video-modal-date"></p>
+          <p class="video-modal__desc" id="video-modal-desc"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="player">
+      <div class="player__inner">
+        <div class="player__cover">
+          <img src="" alt="歌曲封面">
+        </div>
+        <div class="player__info">
+          <div class="player__title">暂无播放</div>
+          <div class="player__artist">--</div>
+        </div>
+        <div class="player__progress">
+          <div class="player__progress-bar">
+            <div class="player__progress-fill"></div>
+          </div>
+          <div class="player__time">
+            <span class="player__current-time">0:00</span>
+            <span class="player__total-time">0:00</span>
+          </div>
+        </div>
+        <div class="player__controls">
+          <button class="player__btn player__btn--prev" aria-label="上一首">&#9194;</button>
+          <button class="player__btn player__btn--play" aria-label="播放">&#9654;</button>
+          <button class="player__btn player__btn--next" aria-label="下一首">&#9193;</button>
+        </div>
+        <div class="player__volume">
+          <span class="player__volume-icon">&#128266;</span>
+          <input type="range" class="player__volume-slider" min="0" max="1" step="0.01" value="0.7">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils/data-loader.js"></script>
+  <script src="js/utils/scroll-animation.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/videos.js"></script>
+</body>
+</html>
