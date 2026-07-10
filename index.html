@@ -17,214 +17,132 @@
   <link rel="stylesheet" href="css/responsive.css">
 
   <style>
-    .hero {
-      min-height: calc(100vh - var(--nav-height) - var(--player-height));
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .page-wrapper {
+      padding-bottom: 0;
+      height: 100vh;
+    }
+
+    .main-content {
+      padding-top: 0;
+      padding-bottom: 0;
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
+    }
+
+    .hero {
       position: relative;
-      padding: var(--spacing-2xl) var(--container-padding);
+      width: 100%;
+      height: calc(100vh - var(--nav-height) - var(--player-height));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero__bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=warm%20cozy%20sunset%20sky%20with%20soft%20clouds%20dreamy%20aesthetic%20pastel%20orange%20pink%20gradient&image_size=landscape_16_9');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 0;
+    }
+
+    .hero__overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 248, 240, 0.3) 0%,
+        rgba(255, 248, 240, 0.5) 50%,
+        rgba(255, 248, 240, 0.7) 100%
+      );
+      z-index: 1;
     }
 
     .hero__content {
-      max-width: 800px;
       position: relative;
       z-index: 2;
+      text-align: center;
+      max-width: 700px;
+      padding: 0 var(--container-padding);
     }
 
     .hero__title {
       font-size: var(--font-size-5xl);
       color: var(--color-text-primary);
-      margin-bottom: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
       opacity: 0;
-      animation: fadeInUp 0.8s ease 0.2s forwards;
-      line-height: 1.3;
+      animation: fadeInUp 1s ease 0.3s forwards;
+      line-height: 1.4;
+      text-shadow: 0 2px 20px rgba(255, 255, 255, 0.5);
     }
 
-    .hero__subtitle {
+    .hero__text {
       font-size: var(--font-size-xl);
       color: var(--color-text-secondary);
-      margin-bottom: var(--spacing-2xl);
+      line-height: 2.2;
       opacity: 0;
-      animation: fadeInUp 0.8s ease 0.4s forwards;
+      animation: fadeInUp 1s ease 0.6s forwards;
       font-weight: 400;
-    }
-
-    .hero__cta {
-      opacity: 0;
-      animation: fadeInUp 0.8s ease 0.6s forwards;
     }
 
     .hero__decoration {
       position: absolute;
-      font-size: 6rem;
-      opacity: 0.1;
+      font-size: 4rem;
+      opacity: 0.2;
       color: var(--color-primary);
       pointer-events: none;
     }
 
     .hero__decoration--left {
-      top: 20%;
-      left: 5%;
-      animation: float 6s ease-in-out infinite;
+      top: 15%;
+      left: 10%;
+      animation: float 5s ease-in-out infinite;
+      z-index: 2;
     }
 
     .hero__decoration--right {
       bottom: 20%;
-      right: 5%;
-      animation: float 6s ease-in-out 3s infinite;
-    }
-
-    .featured-section {
-      padding: var(--spacing-4xl) 0;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: var(--font-size-3xl);
-      margin-bottom: var(--spacing-3xl);
-      position: relative;
-    }
-
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
-      border-radius: var(--radius-full);
-    }
-
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: var(--spacing-xl);
-    }
-
-    .feature-card {
-      background: var(--color-bg-card);
-      border-radius: var(--radius-xl);
-      padding: var(--spacing-2xl);
-      text-align: center;
-      text-decoration: none;
-      color: inherit;
-      transition: all var(--transition-base);
-      border: 1px solid var(--color-border);
-      box-shadow: var(--shadow-sm);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--color-primary-light), var(--color-accent));
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform var(--transition-base);
-    }
-
-    .feature-card:hover {
-      transform: translateY(-8px);
-      box-shadow: var(--shadow-hover);
-    }
-
-    .feature-card:hover::before {
-      transform: scaleX(1);
-    }
-
-    .feature-card__icon {
-      font-size: 3rem;
-      margin-bottom: var(--spacing-lg);
-      display: block;
-    }
-
-    .feature-card__title {
-      font-size: var(--font-size-xl);
-      color: var(--color-text-primary);
-      margin-bottom: var(--spacing-sm);
-      font-family: var(--font-display);
-    }
-
-    .feature-card__desc {
-      color: var(--color-text-muted);
-      font-size: var(--font-size-sm);
-      line-height: 1.8;
-    }
-
-    .quote-section {
-      padding: var(--spacing-4xl) 0;
-      background: var(--color-bg-alt);
-      border-radius: var(--radius-xl);
-      margin: var(--spacing-3xl) 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .quote-section::before {
-      content: '"';
-      position: absolute;
-      top: var(--spacing-lg);
-      left: var(--spacing-2xl);
-      font-family: var(--font-display);
-      font-size: 8rem;
-      color: var(--color-secondary);
-      line-height: 1;
-      opacity: 0.5;
-    }
-
-    .quote-section__content {
-      text-align: center;
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 0 var(--spacing-xl);
-      position: relative;
+      right: 10%;
+      animation: float 5s ease-in-out 2.5s infinite;
       z-index: 2;
     }
 
-    .quote-section__text {
-      font-size: var(--font-size-xl);
-      color: var(--color-text-primary);
-      font-style: italic;
-      line-height: 2;
-      margin-bottom: var(--spacing-lg);
+    .footer {
+      display: none;
     }
 
-    .quote-section__author {
-      color: var(--color-text-muted);
-      font-size: var(--font-size-sm);
+    .back-to-top {
+      display: none;
     }
 
-    .stats-section {
-      padding: var(--spacing-3xl) 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: var(--spacing-xl);
-      text-align: center;
-    }
+    @media (max-width: 768px) {
+      .hero__title {
+        font-size: var(--font-size-4xl);
+      }
 
-    .stat-item {
-      padding: var(--spacing-lg);
-    }
+      .hero__text {
+        font-size: var(--font-size-lg);
+      }
 
-    .stat-item__number {
-      font-size: var(--font-size-4xl);
-      color: var(--color-primary);
-      font-family: var(--font-display);
-      margin-bottom: var(--spacing-xs);
-    }
-
-    .stat-item__label {
-      color: var(--color-text-muted);
-      font-size: var(--font-size-sm);
+      .hero__decoration {
+        font-size: 2.5rem;
+      }
     }
   </style>
 </head>
@@ -250,103 +168,20 @@
     </nav>
 
     <main id="main-content" class="main-content">
-      <section class="hero hero-bg">
+      <section class="hero">
+        <div class="hero__bg"></div>
+        <div class="hero__overlay"></div>
         <span class="hero__decoration hero__decoration--left">❀</span>
         <span class="hero__decoration hero__decoration--right">✿</span>
         <div class="hero__content">
           <h1 class="hero__title">愿所有美好<br>都被温柔收藏</h1>
-          <p class="hero__subtitle">在这里，记录每一份心动与感动<br>让回忆有处安放，让温暖永不褪色</p>
-          <div class="hero__cta">
-            <a href="quotes.html" class="btn btn--primary">
-              <span>开始探索</span>
-              <span>→</span>
-            </a>
-          </div>
+          <p class="hero__text">
+            在这里，记录每一份心动与感动<br>
+            让回忆有处安放，让温暖永不褪色
+          </p>
         </div>
       </section>
-
-      <div class="container">
-        <section class="stats-section animate-on-scroll">
-          <div class="stat-item">
-            <div class="stat-item__number">12</div>
-            <div class="stat-item__label">珍藏文案</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-item__number">8</div>
-            <div class="stat-item__label">暖心回忆</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-item__number">13</div>
-            <div class="stat-item__label">珍贵照片</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-item__number">8</div>
-            <div class="stat-item__label">心动歌曲</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-item__number">6</div>
-            <div class="stat-item__label">美好视频</div>
-          </div>
-        </section>
-
-        <hr class="divider--decorated">
-
-        <section class="featured-section">
-          <h2 class="section-title animate-on-scroll">探索美好</h2>
-          <div class="cards-grid">
-            <a href="quotes.html" class="feature-card animate-on-scroll delay-100">
-              <span class="feature-card__icon">📖</span>
-              <h3 class="feature-card__title">文案馆</h3>
-              <p class="feature-card__desc">那些触动心弦的句子，在某个瞬间让人心头一暖。治愈、爱情、励志、诗意，每一句都值得珍藏。</p>
-            </a>
-            <a href="memories.html" class="feature-card animate-on-scroll delay-200">
-              <span class="feature-card__icon">💌</span>
-              <h3 class="feature-card__title">回忆墙</h3>
-              <p class="feature-card__desc">时间线上的每一个节点，都是我们一起走过的痕迹。聊天记录、温暖瞬间，永远闪闪发光。</p>
-            </a>
-            <a href="gallery.html" class="feature-card animate-on-scroll delay-300">
-              <span class="feature-card__icon">🖼️</span>
-              <h3 class="feature-card__title">相册</h3>
-              <p class="feature-card__desc">镜头定格的不仅是画面，更是那一刻的心情。日常、旅行、节日，每一张都是独家记忆。</p>
-            </a>
-            <a href="music.html" class="feature-card animate-on-scroll delay-400">
-              <span class="feature-card__icon">🎵</span>
-              <h3 class="feature-card__title">音乐台</h3>
-              <p class="feature-card__desc">音乐是记忆的载体。听到某首歌，就会想起某个人、某个场景、某段温柔的时光。</p>
-            </a>
-            <a href="videos.html" class="feature-card animate-on-scroll delay-500">
-              <span class="feature-card__icon">🎬</span>
-              <h3 class="feature-card__title">视频集</h3>
-              <p class="feature-card__desc">动态的画面，生动的声音。那些被记录下来的瞬间，是会流动的美好回忆。</p>
-            </a>
-            <a href="#" class="feature-card animate-on-scroll delay-600" style="pointer-events: none; opacity: 0.7;">
-              <span class="feature-card__icon">✨</span>
-              <h3 class="feature-card__title">更多精彩</h3>
-              <p class="feature-card__desc">未完待续，更多美好正在路上。敬请期待更多温暖的内容和惊喜。</p>
-            </a>
-          </div>
-        </section>
-
-        <section class="quote-section animate-on-scroll">
-          <div class="quote-section__content">
-            <p class="quote-section__text">
-              所有的美好都值得被记录，<br>
-              所有的温柔都值得被珍藏。
-            </p>
-            <p class="quote-section__author">—— 写在前面</p>
-          </div>
-        </section>
-      </div>
     </main>
-
-    <footer class="footer">
-      <div class="container">
-        <p>用心记录，用爱收藏 <span class="footer__heart">❤</span></p>
-        <p style="margin-top: var(--spacing-sm);">© 2024 回忆收藏馆 · 珍藏每一份美好</p>
-      </div>
-    </footer>
-
-    <button class="back-to-top" aria-label="回到顶部">↑</button>
 
     <div class="player">
       <div class="player__inner">
