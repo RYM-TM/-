@@ -2,67 +2,19 @@
   "songs": [
     {
       "id": 1,
-      "title": "晴天",
-      "artist": "周杰伦",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20sunny%20day%20blue%20sky%20white%20clouds%20warm%20aesthetic&image_size=square",
-      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-      "duration": "4:29"
+      "title": "樱花树下的约定",
+      "artist": "未知",
+      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20cherry%20blossom%20tree%20pink%20petals%20warm%20spring%20romantic%20aesthetic&image_size=square",
+      "src": "assets/music/樱花树下的约定.mp3",
+      "duration": ""
     },
     {
       "id": 2,
-      "title": "小幸运",
-      "artist": "田馥甄",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20soft%20pink%20clouds%20dreamy%20romantic%20warm&image_size=square",
-      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-      "duration": "4:08"
-    },
-    {
-      "id": 3,
-      "title": "告白气球",
-      "artist": "周杰伦",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20balloons%20pastel%20colors%20romantic%20sky%20warm&image_size=square",
-      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-      "duration": "3:35"
-    },
-    {
-      "id": 4,
-      "title": "往后余生",
-      "artist": "马良",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20sunset%20silhouette%20couple%20romantic%20warm%20orange&image_size=square",
-      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-      "duration": "5:23"
-    },
-    {
-      "id": 5,
-      "title": "遇见",
-      "artist": "孙燕姿",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20autumn%20leaves%20warm%20light%20cozy%20aesthetic&image_size=square",
-      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
-      "duration": "3:45"
-    },
-    {
-      "id": 6,
-      "title": "我喜欢你时的内心活动",
-      "artist": "陈绮贞",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20soft%20pastel%20flowers%20dreamy%20warm%20aesthetic&image_size=square",
-      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
-      "duration": "4:12"
-    },
-    {
-      "id": 7,
-      "title": "慢慢喜欢你",
-      "artist": "莫文蔚",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20ocean%20waves%20sunset%20warm%20pink%20romantic&image_size=square",
-      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
-      "duration": "5:30"
-    },
-    {
-      "id": 8,
-      "title": "最浪漫的事",
-      "artist": "赵咏华",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20vintage%20warm%20light%20cozy%20room%20romantic&image_size=square",
-      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
-      "duration": "4:55"
+      "title": "戒烟",
+      "artist": "李荣浩",
+      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20lonely%20cigarette%20smoke%20warm%20sunset%20moody%20aesthetic&image_size=square",
+      "src": "assets/music/戒烟.mp3",
+      "duration": ""
     }
   ]
 }
