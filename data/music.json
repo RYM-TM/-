@@ -1,3 +1,28 @@
 {
-  "songs": []
+  "songs": [
+    {
+      "id": 1,
+      "title": "戒烟",
+      "artist": "李荣浩",
+      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20lonely%20cigarette%20smoke%20warm%20sunset%20moody%20aesthetic&image_size=square",
+      "src": "assets/music/戒烟-李荣浩.mp3",
+      "duration": ""
+    },
+    {
+      "id": 2,
+      "title": "樱花树下的约定",
+      "artist": "旺仔小乔",
+      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20cherry%20blossom%20tree%20pink%20petals%20warm%20spring%20romantic%20aesthetic&image_size=square",
+      "src": "assets/music/樱花树下的约定-旺仔小乔.mp3",
+      "duration": ""
+    },
+    {
+      "id": 3,
+      "title": "青衣",
+      "artist": "草帽酱",
+      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20chinese%20opera%20blue%20robe%20traditional%20elegant%20warm%20artistic&image_size=square",
+      "src": "assets/music/青衣-草帽酱.mp3",
+      "duration": ""
+    }
+  ]
 }
