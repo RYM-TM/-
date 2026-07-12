@@ -64,26 +64,58 @@
       color: white;
     }
 
-    .masonry-grid {
-      column-count: 4;
-      column-gap: var(--spacing-lg);
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--spacing-lg);
     }
 
     @media (max-width: 1199px) {
-      .masonry-grid { column-count: 3; }
+      .photo-grid { grid-template-columns: repeat(4, 1fr); }
     }
 
     @media (max-width: 768px) {
-      .masonry-grid { column-count: 2; }
+      .photo-grid { grid-template-columns: repeat(3, 1fr); gap: var(--spacing-md); }
     }
 
     @media (max-width: 480px) {
-      .masonry-grid { column-count: 2; column-gap: var(--spacing-sm); }
+      .photo-grid { grid-template-columns: repeat(2, 1fr); gap: var(--spacing-sm); }
     }
 
-    .masonry-item {
-      break-inside: avoid;
-      margin-bottom: var(--spacing-lg);
+    .photo-card {
+      cursor: pointer;
+      transition: transform var(--transition-base);
+    }
+
+    .photo-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .photo-card__img-wrap {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .photo-card__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--transition-slow);
+    }
+
+    .photo-card:hover .photo-card__img-wrap img {
+      transform: scale(1.05);
+    }
+
+    .photo-card__title {
+      text-align: center;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      font-family: var(--font-display);
     }
 
     .lightbox__counter {
@@ -138,7 +170,7 @@
         <div class="album-tabs animate-on-scroll" id="album-tabs">
         </div>
 
-        <div class="masonry-grid" id="gallery-grid">
+        <div class="photo-grid" id="gallery-grid">
         </div>
       </div>
     </main>

@@ -70,16 +70,15 @@ const GalleryPage = {
     this.currentPhotos = album.photos;
 
     this.gridContainer.innerHTML = album.photos.map((photo, index) => `
-      <div class="masonry-item gallery-item animate-on-scroll" data-index="${index}" style="transition-delay: ${index * 0.05}s">
-        <img src="${photo.src}" alt="${photo.title}" loading="lazy">
-        <div class="gallery-item__overlay">
-          <div style="font-size: var(--font-size-base); margin-bottom: 4px;">${photo.title}</div>
-          <div style="font-size: var(--font-size-xs); opacity: 0.8;">${photo.date}</div>
+      <div class="photo-card animate-on-scroll" data-index="${index}" style="transition-delay: ${index * 0.05}s">
+        <div class="photo-card__img-wrap">
+          <img src="${photo.src}" alt="${photo.title}" loading="lazy">
         </div>
+        <div class="photo-card__title">${photo.title}</div>
       </div>
     `).join('');
 
-    this.gridContainer.querySelectorAll('.gallery-item').forEach(item => {
+    this.gridContainer.querySelectorAll('.photo-card').forEach(item => {
       item.addEventListener('click', () => {
         const index = parseInt(item.dataset.index);
         this.openLightbox(index);
