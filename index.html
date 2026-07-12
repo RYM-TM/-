@@ -41,37 +41,29 @@
       width: 100%;
       height: calc(100vh - var(--nav-height) - var(--player-height));
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: var(--spacing-lg);
       overflow: hidden;
     }
 
     .hero__bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=warm%20cozy%20sunset%20sky%20with%20soft%20clouds%20dreamy%20aesthetic%20pastel%20orange%20pink%20gradient&image_size=landscape_16_9');
-      background-size: cover;
+      position: relative;
+      flex: 1;
+      width: 100%;
+      max-width: 600px;
+      background-color: transparent;
+      background-image: url('assets/images/hero-bg.webp');
+      background-size: contain;
       background-position: center;
       background-repeat: no-repeat;
       z-index: 0;
+      min-height: 0;
     }
 
     .hero__overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        180deg,
-        rgba(255, 248, 240, 0.3) 0%,
-        rgba(255, 248, 240, 0.5) 50%,
-        rgba(255, 248, 240, 0.7) 100%
-      );
-      z-index: 1;
+      display: none;
     }
 
     .hero__content {
@@ -80,6 +72,7 @@
       text-align: center;
       max-width: 700px;
       padding: 0 var(--container-padding);
+      padding-bottom: var(--spacing-xl);
     }
 
     .hero__title {
@@ -102,25 +95,7 @@
     }
 
     .hero__decoration {
-      position: absolute;
-      font-size: 4rem;
-      opacity: 0.2;
-      color: var(--color-primary);
-      pointer-events: none;
-    }
-
-    .hero__decoration--left {
-      top: 15%;
-      left: 10%;
-      animation: float 5s ease-in-out infinite;
-      z-index: 2;
-    }
-
-    .hero__decoration--right {
-      bottom: 20%;
-      right: 10%;
-      animation: float 5s ease-in-out 2.5s infinite;
-      z-index: 2;
+      display: none;
     }
 
     .footer {
