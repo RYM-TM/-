@@ -2,107 +2,14 @@
   "albums": [
     {
       "id": 1,
-      "name": "日常点滴",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=warm%20cozy%20bedroom%20with%20sunlight%20streaming%20through%20window%20soft%20beige%20tones&image_size=square",
+      "name": "盛夏",
+      "cover": "assets/photos/盛夏-01.png",
       "photos": [
         {
           "id": 1,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=warm%20morning%20coffee%20by%20window%20sunlight%20cozy%20aesthetic&image_size=portrait_4_3",
-          "title": "清晨的咖啡",
-          "date": "2024-06-01"
-        },
-        {
-          "id": 2,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=sunset%20city%20skyline%20warm%20orange%20pink%20clouds%20romantic&image_size=landscape_4_3",
-          "title": "城市日落",
-          "date": "2024-06-10"
-        },
-        {
-          "id": 3,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cozy%20bookstore%20cafe%20warm%20lighting%20wooden%20shelves&image_size=square",
-          "title": "书店角落",
-          "date": "2024-06-15"
-        },
-        {
-          "id": 4,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=rainy%20day%20window%20raindrops%20warm%20indoor%20lights&image_size=portrait_4_3",
-          "title": "雨天的窗",
-          "date": "2024-06-20"
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "旅行回忆",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=beach%20sunset%20romantic%20warm%20colors%20ocean%20waves&image_size=square",
-      "photos": [
-        {
-          "id": 5,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=beach%20sunset%20couple%20silhouette%20romantic%20warm%20orange%20sky&image_size=landscape_16_9",
-          "title": "海边日落",
-          "date": "2024-09-10"
-        },
-        {
-          "id": 6,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=mountain%20landscape%20morning%20mist%20warm%20sunrise%20peaceful&image_size=landscape_4_3",
-          "title": "山间晨雾",
-          "date": "2024-09-12"
-        },
-        {
-          "id": 7,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=old%20town%20street%20warm%20lanterns%20evening%20cozy%20atmosphere&image_size=portrait_4_3",
-          "title": "古镇夜色",
-          "date": "2024-09-15"
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "name": "美食记录",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=warm%20cozy%20dining%20table%20with%20food%20candles%20romantic&image_size=square",
-      "photos": [
-        {
-          "id": 8,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=homemade%20cake%20with%20candles%20warm%20lighting%20celebration&image_size=square",
-          "title": "生日蛋糕",
-          "date": "2024-08-01"
-        },
-        {
-          "id": 9,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hotpot%20dinner%20warm%20cozy%20steam%20restaurant%20atmosphere&image_size=landscape_4_3",
-          "title": "热腾腾的火锅",
-          "date": "2024-10-01"
-        },
-        {
-          "id": 10,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=breakfast%20in%20bed%20warm%20morning%20light%20toast%20coffee%20cozy&image_size=landscape_4_3",
-          "title": "爱心早餐",
-          "date": "2024-11-01"
-        }
-      ]
-    },
-    {
-      "id": 4,
-      "name": "节日特辑",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=christmas%20tree%20warm%20lights%20cozy%20living%20room%20festive&image_size=square",
-      "photos": [
-        {
-          "id": 11,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=christmas%20tree%20presents%20warm%20fireplace%20cozy%20holiday&image_size=landscape_4_3",
-          "title": "圣诞树下",
-          "date": "2024-12-25"
-        },
-        {
-          "id": 12,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=new%20year%20fireworks%20night%20sky%20warm%20colors%20celebration&image_size=landscape_16_9",
-          "title": "跨年烟花",
-          "date": "2025-01-01"
-        },
-        {
-          "id": 13,
-          "src": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=valentines%20day%20roses%20candles%20romantic%20dinner%20warm%20light&image_size=square",
-          "title": "情人节",
-          "date": "2025-02-14"
+          "src": "assets/photos/盛夏-01.png",
+          "title": "盛夏 01",
+          "date": ""
         }
       ]
     }
