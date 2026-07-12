@@ -1,20 +1,3 @@
 {
-  "songs": [
-    {
-      "id": 1,
-      "title": "樱花树下的约定",
-      "artist": "未知",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20cherry%20blossom%20tree%20pink%20petals%20warm%20spring%20romantic%20aesthetic&image_size=square",
-      "src": "assets/music/樱花树下的约定.mp3",
-      "duration": ""
-    },
-    {
-      "id": 2,
-      "title": "戒烟",
-      "artist": "李荣浩",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20lonely%20cigarette%20smoke%20warm%20sunset%20moody%20aesthetic&image_size=square",
-      "src": "assets/music/戒烟.mp3",
-      "duration": ""
-    }
-  ]
+  "songs": []
 }
