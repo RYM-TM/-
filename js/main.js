@@ -52,6 +52,8 @@ const PJAX = {
         document.title = newTitle;
         history.pushState(null, '', url);
 
+        this.updatePageStyles(doc);
+
         this.container.innerHTML = newContent.innerHTML;
         this.updateActiveNav(url);
 
@@ -91,6 +93,9 @@ const PJAX = {
 
         if (newContent) {
           document.title = newTitle;
+
+          this.updatePageStyles(doc);
+
           this.container.innerHTML = newContent.innerHTML;
           this.updateActiveNav(window.location.pathname);
 
@@ -122,6 +127,22 @@ const PJAX = {
         link.classList.remove('active');
       }
     });
+  },
+
+  updatePageStyles(doc) {
+    const newStyles = doc.getElementById('page-styles');
+    const currentStyles = document.getElementById('page-styles');
+
+    if (newStyles && currentStyles) {
+      currentStyles.textContent = newStyles.textContent;
+    } else if (newStyles && !currentStyles) {
+      const style = document.createElement('style');
+      style.id = 'page-styles';
+      style.textContent = newStyles.textContent;
+      document.head.appendChild(style);
+    } else if (!newStyles && currentStyles) {
+      currentStyles.textContent = '';
+    }
   },
 
   reinitializePageScripts() {
