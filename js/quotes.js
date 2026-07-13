@@ -1,6 +1,6 @@
 const QuotesPage = {
   data: null,
-  currentCategory: '全部',
+  currentCategory: '治愈',
   container: null,
   tabsContainer: null,
 
@@ -15,6 +15,9 @@ const QuotesPage = {
   async loadData() {
     try {
       this.data = await DataLoader.loadQuotes();
+      if (!this.data.categories.includes(this.currentCategory)) {
+        this.currentCategory = this.data.categories[0];
+      }
       this.renderTabs();
       this.renderQuotes();
     } catch (error) {
@@ -53,10 +56,7 @@ const QuotesPage = {
   renderQuotes() {
     if (!this.data || !this.container) return;
 
-    let quotes = this.data.quotes;
-    if (this.currentCategory !== '全部') {
-      quotes = quotes.filter(q => q.category === this.currentCategory);
-    }
+    const quotes = this.data.quotes.filter(q => q.category === this.currentCategory);
 
     this.container.innerHTML = quotes.map((quote, index) => `
       <div class="quote-card animate-on-scroll" style="animation-delay: ${index * 0.05}s">
@@ -73,7 +73,7 @@ const QuotesPage = {
 
   reinit() {
     this.data = null;
-    this.currentCategory = '全部';
+    this.currentCategory = '治愈';
     this.container = document.getElementById('quotes-container');
     this.tabsContainer = document.getElementById('filter-tabs');
     if (this.container) {
