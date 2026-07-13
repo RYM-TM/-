@@ -8,10 +8,23 @@ OUTPUT_FILE = "data/music.json"
 AUDIO_EXT = (".mp3", ".m4a", ".ogg", ".wav", ".flac", ".aac")
 IMAGE_EXT = (".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp")
 
+def load_existing_covers():
+    """读取已有 music.json 中的封面映射，用于保留未找到新封面时的旧封面"""
+    if not os.path.exists(OUTPUT_FILE):
+        return {}
+    try:
+        with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return {s["title"]: s.get("cover", "") for s in data.get("songs", []) if s.get("cover")}
+    except (json.JSONDecodeError, KeyError):
+        return {}
+
 def main():
     if not os.path.isdir(MUSIC_DIR):
         print(f"目录不存在: {MUSIC_DIR}")
         return
+
+    existing_covers = load_existing_covers()
 
     files = os.listdir(MUSIC_DIR)
 
@@ -37,7 +50,7 @@ def main():
             title = name_no_ext
             artist = "未知"
 
-        cover = cover_map.get(title, "")
+        cover = cover_map.get(title) or existing_covers.get(title, "")
 
         songs.append({
             "id": idx,

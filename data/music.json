@@ -12,7 +12,7 @@
       "id": 2,
       "title": "樱花树下的约定",
       "artist": "旺仔小乔",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20cherry%20blossom%20tree%20pink%20petals%20warm%20spring%20romantic%20aesthetic&image_size=square",
+      "cover": "assets/music/樱花树下的约定-封面.jpg",
       "src": "assets/music/樱花树下的约定-旺仔小乔.mp3",
       "duration": ""
     },
