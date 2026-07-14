@@ -2,10 +2,10 @@
   "songs": [
     {
       "id": 1,
-      "title": "戒烟",
+      "title": "戒烟（十三幺）",
       "artist": "李荣浩",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20lonely%20cigarette%20smoke%20warm%20sunset%20moody%20aesthetic&image_size=square",
-      "src": "assets/music/戒烟-李荣浩.mp3",
+      "cover": "assets/music/戒烟（十三幺）-封面.jpg",
+      "src": "assets/music/戒烟（十三幺）-李荣浩.mp3",
       "duration": ""
     },
     {
