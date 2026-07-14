@@ -18,9 +18,17 @@
     },
     {
       "id": 3,
+      "title": "泡沫（dj）",
+      "artist": "邓紫棋",
+      "cover": "assets/music/泡沫（dj）-封面.jpg",
+      "src": "assets/music/泡沫（dj）-邓紫棋.mp3",
+      "duration": ""
+    },
+    {
+      "id": 4,
       "title": "青衣",
       "artist": "草帽酱",
-      "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=album%20cover%20chinese%20opera%20blue%20robe%20traditional%20elegant%20warm%20artistic&image_size=square",
+      "cover": "assets/music/青衣-封面.jpg",
       "src": "assets/music/青衣-草帽酱.mp3",
       "duration": ""
     }
