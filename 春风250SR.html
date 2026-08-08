@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>250SR-Dream-Dash | </title>
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --surface: #1a1a1a;
+            --surface-light: #222;
+            --border: #333;
+            --text: #e0e0e0;
+            --text-dim: #999;
+            --accent: #ff6b2b;
+            --accent-glow: #ff8c52;
+            --green: #00e676;
+            --yellow: #ffd600;
+            --red: #ff1744;
+            --blue: #4db6e8;
+            --danger: #ff3d3d;
+            --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+            --font-sans: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+            --transition: 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 16px;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            background-image:
+                radial-gradient(ellipse at 50% 25%, rgba(255, 107, 43, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 30% 70%, rgba(0, 180, 220, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 70%, rgba(255, 107, 43, 0.03) 0%, transparent 50%);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            grid-template-rows: auto auto;
+            gap: 18px;
+            grid-template-areas:
+                "gauge gauge"
+                "left right"
+                "bottom bottom";
+        }
+
+        /* ========== 仪表盘区域 ========== */
+        .gauge-section {
+            grid-area: gauge;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+            position: relative;
+        }
+        .gauge-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas#gaugeCanvas {
+            display: block;
+            width: 380px;
+            height: 380px;
+            filter: drop-shadow(0 0 30px rgba(255, 107, 43, 0.25));
+            transition: filter 0.5s ease;
+        }
+        .gauge-center-label {
+            position: absolute;
+            bottom: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .gauge-center-label .saved-amount {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        .gauge-center-label .saved-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ========== 左侧：费用条目 ========== */
+        .left-panel {
+            grid-area: left;
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 0;
+        }
+        .panel-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            margin-bottom: 2px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .panel-title::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+        .expense-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .expense-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .expense-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .expense-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        .expense-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 11px;
+            background: var(--surface-light);
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            transition: all var(--transition);
+            flex-wrap: wrap;
+            position: relative;
+        }
+        .expense-item:hover {
+            border-color: #444;
+            background: #252525;
+        }
+        .expense-item.covered {
+            opacity: 0.55;
+            text-decoration: line-through;
+            text-decoration-color: var(--text-dim);
+            text-decoration-thickness: 1px;
+            background: #1a1a1a;
+            border-color: #2a2a2a;
+        }
+        .expense-item.covered .expense-name,
+        .expense-item.covered .expense-amount-display {
+            color: #777;
+        }
+        .expense-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #555;
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+            transition: all var(--transition);
+            background: transparent;
+        }
+        .expense-checkbox:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(255, 107, 43, 0.4);
+        }
+        .expense-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            color: #fff;
+            font-weight: bold;
+        }
+        .expense-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .expense-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #ddd;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color var(--transition);
+        }
+        .expense-amount-display {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+        .expense-actions {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+        .btn-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid #444;
+            background: #1f1f1f;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            line-height: 1;
+        }
+        .btn-icon:hover {
+            background: #333;
+            color: #fff;
+            border-color: #666;
+        }
+        .btn-icon.danger:hover {
+            background: #3d1515;
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        .btn-icon.edit:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+            background: #1a2530;
+        }
+        .expense-edit-row {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .expense-edit-row input {
+            flex: 1;
+            min-width: 60px;
+            padding: 5px 8px;
+            background: #111;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+        }
+        .expense-edit-row input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 6px rgba(255, 107, 43, 0.2);
+        }
+        .btn-mini {
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #555;
+            background: #2a2a2a;
+            color: #ddd;
+            cursor: pointer;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            transition: all var(--transition);
+        }
+        .btn-mini:hover {
+            background: #3a3a3a;
+            border-color: #888;
+        }
+        .btn-mini.save {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            font-weight: 600;
+        }
+        .btn-mini.save:hover {
+            background: #ff7d3d;
+            box-shadow: 0 0 12px rgba(255, 107, 43, 0.4);
+        }
+        .btn-mini.cancel {
+            background: #2a2a2a;
+            border-color: #555;
+        }
+        .add-expense-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+            padding-top: 4px;
+        }
+        .add-expense-row input {
+            flex: 1;
+            min-width: 70px;
+            padding: 7px 10px;
+            background: #111;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+        }
+        .add-expense-row input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 6px rgba(255, 107, 43, 0.2);
+        }
+        .btn-add {
+            padding: 7px 14px;
+            border-radius: 4px;
+            border: 1px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            transition: all var(--transition);
+        }
+        .btn-add:hover {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 14px rgba(255, 107, 43, 0.4);
+        }
+
+        /* ========== 右侧面板 ========== */
+        .right-panel {
+            grid-area: right;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 0;
+        }
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .card-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .daily-record-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .daily-record-row input {
+            flex: 1;
+            min-width: 80px;
+            padding: 10px 12px;
+            background: #111;
+            border: 2px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: var(--font-mono);
+            letter-spacing: 1px;
+            transition: all var(--transition);
+        }
+        .daily-record-row input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(255, 107, 43, 0.3);
+        }
+        .btn-confirm {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all var(--transition);
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(255, 107, 43, 0.3);
+        }
+        .btn-confirm:hover {
+            background: #ff7d3d;
+            box-shadow: 0 6px 24px rgba(255, 107, 43, 0.5);
+            transform: translateY(-1px);
+        }
+        .btn-confirm:active {
+            transform: scale(0.96);
+            transition: transform 0.08s ease;
+        }
+        .today-hint {
+            font-size: 0.78rem;
+            color: var(--yellow);
+            padding: 6px 10px;
+            background: rgba(255, 214, 0, 0.08);
+            border-radius: 4px;
+            border-left: 3px solid var(--yellow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .today-hint .hint-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .today-hint .hint-actions button {
+            padding: 3px 10px;
+            border-radius: 3px;
+            border: 1px solid #666;
+            background: #1f1f1f;
+            color: #ddd;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all var(--transition);
+        }
+        .today-hint .hint-actions button:hover {
+            background: #333;
+            border-color: #aaa;
+        }
+        .today-hint .hint-actions button.overwrite-btn {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .today-hint .hint-actions button.overwrite-btn:hover {
+            background: #2d1a10;
+            border-color: var(--accent-glow);
+        }
+        .today-hint .hint-actions button.delete-today-btn {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        .today-hint .hint-actions button.delete-today-btn:hover {
+            background: #2d1010;
+        }
+
+        /* ===== 计算器样式 ===== */
+        .calculator-display {
+            background: #0a0a0a;
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            text-align: right;
+            font-family: var(--font-mono);
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #fff;
+            border: 1px solid #2a2a2a;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            letter-spacing: 1px;
+            transition: all 0.15s ease;
+        }
+        .calculator-display.shrink {
+            font-size: 1.1rem;
+        }
+
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+
+        .calc-btn {
+            padding: 12px 0;
+            border-radius: var(--radius-sm);
+            border: 1px solid #333;
+            background: #1c1c1c;
+            color: #ddd;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            text-align: center;
+            line-height: 1.2;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .calc-btn:hover {
+            background: #2c2c2c;
+            border-color: #555;
+        }
+        .calc-btn:active {
+            transform: scale(0.94);
+            transition: transform 0.06s ease;
+        }
+
+        .calc-btn.num {
+            background: #181818;
+            color: #f0f0f0;
+        }
+        .calc-btn.num:hover {
+            background: #282828;
+        }
+
+        .calc-btn.op {
+            background: #252525;
+            color: var(--accent);
+            border-color: #3a3a3a;
+        }
+        .calc-btn.op:hover {
+            background: #333;
+            border-color: var(--accent);
+        }
+
+        .calc-btn.eq {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 2px 12px rgba(255, 107, 43, 0.25);
+        }
+        .calc-btn.eq:hover {
+            background: #ff7d3d;
+            box-shadow: 0 4px 20px rgba(255, 107, 43, 0.4);
+        }
+
+        .calc-btn.clear {
+            background: #2a1515;
+            color: var(--danger);
+            border-color: #3a1a1a;
+        }
+        .calc-btn.clear:hover {
+            background: #3d1a1a;
+            border-color: var(--danger);
+        }
+
+        .calc-btn.span-2 {
+            grid-column: span 2;
+        }
+
+        /* 历史日志 */
+        .log-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .log-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .log-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .log-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        .log-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: var(--surface-light);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            gap: 8px;
+            transition: background var(--transition);
+        }
+        .log-item:hover {
+            background: #282828;
+        }
+        .log-date {
+            color: #aaa;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+        .log-amount {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .log-delete {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.65rem;
+            transition: all var(--transition);
+            flex-shrink: 0;
+        }
+        .log-delete:hover {
+            color: var(--danger);
+            border-color: var(--danger);
+            background: #2d1010;
+        }
+        .log-empty {
+            text-align: center;
+            color: #555;
+            font-size: 0.8rem;
+            padding: 16px;
+        }
+
+        /* ========== 底部汇总栏 ========== */
+        .bottom-bar {
+            grid-area: bottom;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 14px 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+        .stat-item {
+            text-align: center;
+            min-width: 100px;
+            flex: 1;
+        }
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .stat-value.target {
+            color: var(--blue);
+        }
+        .stat-value.saved {
+            color: var(--green);
+        }
+        .stat-value.remaining {
+            color: var(--accent);
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* ========== 推背感动画 ========== */
+        .thrust-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 999;
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ff8c00;
+            text-shadow: 0 0 40px rgba(255, 140, 0, 0.9), 0 0 80px rgba(255, 100, 0, 0.6);
+            opacity: 0;
+            letter-spacing: 4px;
+            animation: thrust-pop 1s ease-out forwards;
+        }
+        @keyframes thrust-pop {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3);
+            }
+            18% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.6);
+            }
+            35% {
+                opacity: 0.9;
+                transform: translate(-50%, -50%) scale(1.3);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(2.2);
+            }
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 820px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                grid-template-areas:
+                    "gauge"
+                    "left"
+                    "right"
+                    "bottom";
+                gap: 12px;
+            }
+            canvas#gaugeCanvas {
+                width: 280px;
+                height: 280px;
+            }
+            .gauge-center-label {
+                bottom: 30px;
+            }
+            .gauge-center-label .saved-amount {
+                font-size: 1.2rem;
+            }
+            .bottom-bar {
+                gap: 8px;
+                padding: 10px 14px;
+            }
+            .stat-value {
+                font-size: 1rem;
+            }
+            .expense-list {
+                max-height: 250px;
+            }
+            .log-list {
+                max-height: 150px;
+            }
+            .calculator-display {
+                font-size: 1.3rem;
+                min-height: 48px;
+                padding: 10px 14px;
+            }
+            .calc-btn {
+                padding: 10px 0;
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 400px) {
+            canvas#gaugeCanvas {
+                width: 220px;
+                height: 220px;
+            }
+            .gauge-center-label {
+                bottom: 18px;
+            }
+            .gauge-center-label .saved-amount {
+                font-size: 1rem;
+            }
+            .gauge-center-label .saved-label {
+                font-size: 0.6rem;
+            }
+            .calculator-display {
+                font-size: 1.1rem;
+                min-height: 40px;
+                padding: 8px 12px;
+            }
+            .calc-btn {
+                padding: 8px 0;
+                font-size: 0.85rem;
+            }
+            .calculator-buttons {
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- 仪表盘 -->
+        <section class="gauge-section">
+            <div class="gauge-wrapper">
+                <canvas id="gaugeCanvas" width="400" height="400"></canvas>
+                <div class="gauge-center-label">
+                    <div class="saved-amount" id="centerSaved">¥0</div>
+                    <div class="saved-label">已攒金额</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 左侧：费用条目 -->
+        <section class="left-panel" id="leftPanel">
+            <div class="panel-title">🏍️ 费用构成</div>
+            <ul class="expense-list" id="expenseList"></ul>
+            <div class="add-expense-row">
+                <input type="text" id="newExpenseName" placeholder="名称" maxlength="30" aria-label="新费用名称">
+                <input type="number" id="newExpenseAmount" placeholder="金额" min="1" step="1" aria-label="新费用金额">
+                <button class="btn-add" id="btnAddExpense" title="添加费用条目">＋ 添加</button>
+            </div>
+        </section>
+
+        <!-- 右侧面板 -->
+        <div class="right-panel">
+            <!-- 每日记账 -->
+            <div class="card">
+                <div class="card-title">💰 每日记账</div>
+                <div class="daily-record-row">
+                    <input type="number" id="dailyAmount" placeholder="今日攒入金额" min="1" step="1" aria-label="今日攒入金额">
+                    <button class="btn-confirm" id="btnConfirmRecord">确认存入</button>
+                </div>
+                <div id="todayHint" style="margin-top:8px;"></div>
+            </div>
+
+            <!-- ===== 计算器 ===== -->
+            <div class="card">
+                <div class="card-title">🧮 计算器</div>
+                <div class="calculator-display" id="calcDisplay">0</div>
+                <div class="calculator-buttons">
+                    <button class="calc-btn clear" data-action="clear">C</button>
+                    <button class="calc-btn op" data-action="operator" data-value="÷">÷</button>
+                    <button class="calc-btn op" data-action="operator" data-value="×">×</button>
+                    <button class="calc-btn op" data-action="operator" data-value="-">−</button>
+
+                    <button class="calc-btn num" data-action="digit" data-value="7">7</button>
+                    <button class="calc-btn num" data-action="digit" data-value="8">8</button>
+                    <button class="calc-btn num" data-action="digit" data-value="9">9</button>
+                    <button class="calc-btn op" data-action="operator" data-value="+">+</button>
+
+                    <button class="calc-btn num" data-action="digit" data-value="4">4</button>
+                    <button class="calc-btn num" data-action="digit" data-value="5">5</button>
+                    <button class="calc-btn num" data-action="digit" data-value="6">6</button>
+                    <button class="calc-btn eq" data-action="equals">=</button>
+
+                    <button class="calc-btn num" data-action="digit" data-value="1">1</button>
+                    <button class="calc-btn num" data-action="digit" data-value="2">2</button>
+                    <button class="calc-btn num" data-action="digit" data-value="3">3</button>
+                    <button class="calc-btn eq" data-action="equals">=</button>
+
+                    <button class="calc-btn num span-2" data-action="digit" data-value="0">0</button>
+                    <button class="calc-btn num" data-action="digit" data-value=".">.</button>
+                    <button class="calc-btn eq" data-action="equals">=</button>
+                </div>
+            </div>
+
+            <!-- 历史日志 -->
+            <div class="card">
+                <div class="card-title">📋 记账日志</div>
+                <ul class="log-list" id="logList"></ul>
+                <div class="log-empty" id="logEmpty" style="display:none;">暂无记录，开始攒钱吧！</div>
+            </div>
+        </div>
+
+        <!-- 底部汇总 -->
+        <div class="bottom-bar">
+            <div class="stat-item">
+                <div class="stat-value target" id="statTarget">¥0</div>
+                <div class="stat-label">总目标</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value saved" id="statSaved">¥0</div>
+                <div class="stat-label">已攒总额</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value remaining" id="statRemaining">¥0</div>
+                <div class="stat-label">剩余缺口</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 推背感动画容器 -->
+    <div id="thrustContainer"></div>
+
+    <script>
+        (function() {
+            // ==================== 常量 ====================
+            const STORAGE_KEY = 'SR250DreamDash';
+            const THRUST_POOL = ['嗡！', '咻！', '嗷！', '突突！', '嗖！', '轰！', '唰！', '呜呜！', '噼啪！', 'Boom！',
+                'Zoom！', 'Vroom！', '嘎呜！', '嘶——', '嘭！'
+            ];
+
+            // 仪表盘角度常量（弧度）
+            const GAUGE_START_ANGLE = (135 * Math.PI) / 180; // 135° = 左下
+            const GAUGE_END_ANGLE = (405 * Math.PI) / 180; // 405° = 右下（等同于45°）
+            const GAUGE_TOTAL_SPAN = GAUGE_END_ANGLE - GAUGE_START_ANGLE; // 270° = 3π/2
+
+            // ==================== DOM引用 ====================
+            const canvas = document.getElementById('gaugeCanvas');
+            const ctx = canvas.getContext('2d');
+            const centerSavedEl = document.getElementById('centerSaved');
+            const expenseListEl = document.getElementById('expenseList');
+            const dailyAmountInput = document.getElementById('dailyAmount');
+            const btnConfirmRecord = document.getElementById('btnConfirmRecord');
+            const todayHintEl = document.getElementById('todayHint');
+            const logListEl = document.getElementById('logList');
+            const logEmptyEl = document.getElementById('logEmpty');
+            const statTargetEl = document.getElementById('statTarget');
+            const statSavedEl = document.getElementById('statSaved');
+            const statRemainingEl = document.getElementById('statRemaining');
+            const thrustContainer = document.getElementById('thrustContainer');
+            const btnAddExpense = document.getElementById('btnAddExpense');
+            const newExpenseNameInput = document.getElementById('newExpenseName');
+            const newExpenseAmountInput = document.getElementById('newExpenseAmount');
+
+            // 计算器 DOM
+            const calcDisplay = document.getElementById('calcDisplay');
+
+            // ==================== 数据状态 ====================
+            let appData = {
+                expenseItems: [], // [{id, name, amount, covered}]
+                records: [], // [{date: 'YYYY-MM-DD', amount}]
+            };
+
+            // 动画状态
+            let currentPointerAngle = GAUGE_START_ANGLE;
+            let targetPointerAngle = GAUGE_START_ANGLE;
+            let pointerVelocity = 0;
+            let animationId = null;
+            let isAnimating = false;
+
+            // 编辑状态追踪
+            let editingExpenseId = null;
+
+            // ===== 计算器状态 =====
+            let calcState = {
+                currentInput: '0',
+                previousInput: '',
+                operator: null,
+                shouldResetDisplay: false,
+                lastAction: null, // 'digit' | 'operator' | 'equals' | 'clear'
+            };
+
+            // ==================== 工具函数 ====================
+            function generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+            }
+
+            function formatCurrency(num) {
+                if (num >= 10000) {
+                    const wan = num / 10000;
+                    if (wan === Math.floor(wan)) return '¥' + wan + '万';
+                    return '¥' + wan.toFixed(1) + '万';
+                }
+                return '¥' + num.toLocaleString('zh-CN');
+            }
+
+            function formatCurrencyCompact(num) {
+                if (num >= 10000) {
+                    return (num / 10000).toFixed(1) + 'w';
+                }
+                if (num >= 1000) {
+                    return (num / 1000).toFixed(1) + 'k';
+                }
+                return num.toString();
+            }
+
+            function getTodayStr() {
+                const d = new Date();
+                return d.getFullYear() + '-' +
+                    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(d.getDate()).padStart(2, '0');
+            }
+
+            function getDateStr(dateObj) {
+                return dateObj.getFullYear() + '-' +
+                    String(dateObj.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(dateObj.getDate()).padStart(2, '0');
+            }
+
+            function formatDateDisplay(dateStr) {
+                const parts = dateStr.split('-');
+                return parts[0] + '年' + parseInt(parts[1]) + '月' + parseInt(parts[2]) + '日';
+            }
+
+            // ==================== 数据持久化 ====================
+            function saveData() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+                } catch (e) {
+                    console.warn('本地存储写入失败:', e);
+                }
+            }
+
+            function loadData() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        appData.expenseItems = parsed.expenseItems || [];
+                        appData.records = parsed.records || [];
+                        appData.expenseItems.forEach(item => {
+                            if (!item.id) item.id = generateId();
+                        });
+                    } else {
+                        initDefaultData();
+                    }
+                } catch (e) {
+                    console.warn('本地存储读取失败，使用默认数据:', e);
+                    initDefaultData();
+                }
+            }
+
+            function initDefaultData() {
+                appData.expenseItems = [
+                    { id: generateId(), name: '裸车价（250SR）', amount: 19980, covered: false },
+                    { id: generateId(), name: '购置税', amount: 1768, covered: false },
+                    { id: generateId(), name: '交强险', amount: 400, covered: false },
+                    { id: generateId(), name: '上牌费', amount: 500, covered: false },
+                    { id: generateId(), name: '商业险', amount: 1200, covered: false },
+                    { id: generateId(), name: '头盔护具', amount: 2000, covered: false },
+                    { id: generateId(), name: '骑行装备', amount: 1500, covered: false },
+                ];
+                appData.records = [];
+                saveData();
+            }
+
+            // ==================== 业务计算 ====================
+            function getTotalTarget() {
+                return appData.expenseItems
+                    .filter(item => !item.covered)
+                    .reduce((sum, item) => sum + item.amount, 0);
+            }
+
+            function getTotalSaved() {
+                return appData.records.reduce((sum, r) => sum + r.amount, 0);
+            }
+
+            function getProgressPercent() {
+                const target = getTotalTarget();
+                if (target <= 0) return 1;
+                const saved = getTotalSaved();
+                return Math.min(saved / target, 1);
+            }
+
+            function getRemainingGap() {
+                const target = getTotalTarget();
+                const saved = getTotalSaved();
+                return Math.max(0, target - saved);
+            }
+
+            function progressToAngle(progress) {
+                return GAUGE_START_ANGLE + progress * GAUGE_TOTAL_SPAN;
+            }
+
+            function getTodayRecord() {
+                const today = getTodayStr();
+                return appData.records.find(r => r.date === today) || null;
+            }
+
+            // ==================== 仪表盘绘制 ====================
+            function drawGauge(pointerAngle) {
+                const w = canvas.width;
+                const h = canvas.height;
+                const cx = w / 2;
+                const cy = h / 2 + 8;
+                const radius = 155;
+                const innerRadius = radius - 38;
+
+                ctx.clearRect(0, 0, w, h);
+
+                const totalTarget = getTotalTarget();
+                const progress = totalTarget > 0 ? getProgressPercent() : 1;
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius + 6, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                ctx.fill();
+                ctx.restore();
+
+                ctx.save();
+                const outerGrad = ctx.createRadialGradient(cx, cy, radius - 2, cx, cy, radius + 4);
+                outerGrad.addColorStop(0, '#3a3a3a');
+                outerGrad.addColorStop(0.5, '#555');
+                outerGrad.addColorStop(1, '#1a1a1a');
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius + 3, 0, Math.PI * 2);
+                ctx.fillStyle = outerGrad;
+                ctx.fill();
+                ctx.restore();
+
+                ctx.save();
+                const faceGrad = ctx.createRadialGradient(cx, cy, innerRadius - 10, cx, cy, radius);
+                faceGrad.addColorStop(0, '#1c1c1c');
+                faceGrad.addColorStop(1, '#111');
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius - 2, 0, Math.PI * 2);
+                ctx.fillStyle = faceGrad;
+                ctx.fill();
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.restore();
+
+                const arcWidth = 16;
+                const arcOuterR = radius - 14;
+                const arcInnerR = arcOuterR - arcWidth;
+                const colorSegments = [
+                    { start: 0, end: 0.60, color: '#00e676' },
+                    { start: 0.60, end: 0.85, color: '#ffd600' },
+                    { start: 0.85, end: 1.0, color: '#ff1744' },
+                ];
+
+                colorSegments.forEach(seg => {
+                    const startA = GAUGE_START_ANGLE + seg.start * GAUGE_TOTAL_SPAN;
+                    const endA = GAUGE_START_ANGLE + seg.end * GAUGE_TOTAL_SPAN;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, arcOuterR, startA, endA);
+                    ctx.arc(cx, cy, arcInnerR, endA, startA, true);
+                    ctx.closePath();
+                    ctx.fillStyle = seg.color;
+                    ctx.globalAlpha = 0.55;
+                    ctx.fill();
+                    ctx.globalAlpha = 0.7;
+                    ctx.strokeStyle = seg.color;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    ctx.restore();
+                });
+
+                const totalTicks = 50;
+                for (let i = 0; i <= totalTicks; i++) {
+                    const fraction = i / totalTicks;
+                    const angle = GAUGE_START_ANGLE + fraction * GAUGE_TOTAL_SPAN;
+                    const isMajor = i % 5 === 0;
+                    const tickOuterR = radius - 16;
+                    const tickInnerR = isMajor ? radius - 38 : radius - 28;
+                    const tickWidth = isMajor ? 2.5 : 1;
+
+                    const x1 = cx + Math.cos(angle) * tickOuterR;
+                    const y1 = cy + Math.sin(angle) * tickOuterR;
+                    const x2 = cx + Math.cos(angle) * tickInnerR;
+                    const y2 = cy + Math.sin(angle) * tickInnerR;
+
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.strokeStyle = isMajor ? '#e0e0e0' : '#666';
+                    ctx.lineWidth = tickWidth;
+                    ctx.lineCap = 'round';
+                    ctx.stroke();
+                    ctx.restore();
+
+                    if (isMajor && totalTarget > 0) {
+                        const labelR = tickInnerR - 16;
+                        const lx = cx + Math.cos(angle) * labelR;
+                        const ly = cy + Math.sin(angle) * labelR;
+                        const labelValue = Math.round(fraction * totalTarget);
+                        ctx.save();
+                        ctx.font = 'bold 10px "SF Mono","Consolas",monospace';
+                        ctx.fillStyle = '#ccc';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(formatCurrencyCompact(labelValue), lx, ly);
+                        ctx.restore();
+                    }
+                }
+                if (totalTarget > 0) {
+                    const zeroAngle = GAUGE_START_ANGLE;
+                    const zr = arcInnerR - 16;
+                    const zx = cx + Math.cos(zeroAngle) * zr;
+                    const zy = cy + Math.sin(zeroAngle) * zr;
+                    ctx.save();
+                    ctx.font = 'bold 10px "SF Mono","Consolas",monospace';
+                    ctx.fillStyle = '#ccc';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('0', zx, zy);
+                    ctx.restore();
+                }
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(cx, cy, arcInnerR - 2, 0, Math.PI * 2);
+                ctx.strokeStyle = '#2a2a2a';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                const shadowAngle = pointerAngle + 0.015;
+                drawPointer(cx, cy, radius - 42, shadowAngle, 'rgba(0,0,0,0.35)', 5);
+                ctx.restore();
+
+                drawPointer(cx, cy, radius - 42, pointerAngle, '#ff2d2d', 3.5);
+                drawPointer(cx, cy, radius - 48, pointerAngle, '#ff6b6b', 0.8);
+
+                ctx.save();
+                const centerGrad = ctx.createRadialGradient(cx, cy, 4, cx, cy, 18);
+                centerGrad.addColorStop(0, '#fff');
+                centerGrad.addColorStop(0.3, '#ddd');
+                centerGrad.addColorStop(0.7, '#333');
+                centerGrad.addColorStop(1, '#111');
+                ctx.beginPath();
+                ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+                ctx.fillStyle = centerGrad;
+                ctx.fill();
+                ctx.strokeStyle = '#555';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#ff3333';
+                ctx.fill();
+                ctx.shadowColor = 'rgba(255,50,50,0.7)';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.restore();
+
+                const pctText = totalTarget > 0 ? Math.round(progress * 100) + '%' : '100%';
+                ctx.save();
+                ctx.font = 'bold 20px "SF Mono","Consolas",monospace';
+                ctx.fillStyle = '#fff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(pctText, cx, cy - radius + 70);
+                ctx.restore();
+            }
+
+            function drawPointer(cx, cy, length, angle, color, lineWidth) {
+                ctx.save();
+                const tipX = cx + Math.cos(angle) * length;
+                const tipY = cy + Math.sin(angle) * length;
+
+                const baseWidth = 9;
+                const perpAngle = angle + Math.PI / 2;
+                const baseCX = cx - Math.cos(angle) * 22;
+                const baseCY = cy - Math.sin(angle) * 22;
+
+                const bx1 = baseCX + Math.cos(perpAngle) * baseWidth;
+                const by1 = baseCY + Math.sin(perpAngle) * baseWidth;
+                const bx2 = baseCX - Math.cos(perpAngle) * baseWidth;
+                const by2 = baseCY - Math.sin(perpAngle) * baseWidth;
+
+                ctx.beginPath();
+                ctx.moveTo(tipX, tipY);
+                ctx.lineTo(bx1, by1);
+                ctx.lineTo(bx2, by2);
+                ctx.closePath();
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                ctx.lineWidth = lineWidth * 0.5;
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // ==================== 动画循环 ====================
+            function setTargetAngle(angle) {
+                targetPointerAngle = angle;
+                if (!isAnimating) {
+                    isAnimating = true;
+                    startAnimationLoop();
+                }
+            }
+
+            function startAnimationLoop() {
+                if (animationId) return;
+
+                function loop() {
+                    const diff = targetPointerAngle - currentPointerAngle;
+                    const absDiff = Math.abs(diff);
+
+                    const springK = 0.18;
+                    const damping = 0.65;
+                    const acceleration = diff * springK - pointerVelocity * damping;
+                    pointerVelocity += acceleration;
+                    currentPointerAngle += pointerVelocity;
+
+                    if (absDiff < 0.0003 && Math.abs(pointerVelocity) < 0.0002) {
+                        currentPointerAngle = targetPointerAngle;
+                        pointerVelocity = 0;
+                        isAnimating = false;
+                        animationId = null;
+                        drawGauge(currentPointerAngle);
+                        return;
+                    }
+
+                    if (pointerVelocity > 0 && currentPointerAngle > targetPointerAngle && absDiff < 0.05) {
+                        currentPointerAngle = targetPointerAngle;
+                        pointerVelocity = 0;
+                        isAnimating = false;
+                        animationId = null;
+                        drawGauge(currentPointerAngle);
+                        return;
+                    }
+                    if (pointerVelocity < 0 && currentPointerAngle < targetPointerAngle && absDiff < 0.05) {
+                        currentPointerAngle = targetPointerAngle;
+                        pointerVelocity = 0;
+                        isAnimating = false;
+                        animationId = null;
+                        drawGauge(currentPointerAngle);
+                        return;
+                    }
+
+                    drawGauge(currentPointerAngle);
+                    animationId = requestAnimationFrame(loop);
+                }
+                animationId = requestAnimationFrame(loop);
+            }
+
+            function updateGaugeTarget() {
+                const progress = getProgressPercent();
+                const newTarget = progressToAngle(progress);
+                setTargetAngle(newTarget);
+            }
+
+            // ==================== UI渲染 ====================
+            function renderAll() {
+                renderExpenseList();
+                renderLogList();
+                renderBottomStats();
+                renderTodayHint();
+                updateGaugeTarget();
+                updateCenterLabel();
+            }
+
+            function renderExpenseList() {
+                expenseListEl.innerHTML = '';
+                appData.expenseItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'expense-item' + (item.covered ? ' covered' : '');
+                    li.setAttribute('data-id', item.id);
+
+                    if (editingExpenseId === item.id) {
+                        li.innerHTML = `
+                            <div class="expense-edit-row">
+                                <input type="text" class="edit-name-input" value="${escapeHtml(item.name)}" maxlength="30" placeholder="名称">
+                                <input type="number" class="edit-amount-input" value="${item.amount}" min="1" step="1" placeholder="金额">
+                                <button class="btn-mini save" data-action="save-edit" data-id="${item.id}">保存</button>
+                                <button class="btn-mini cancel" data-action="cancel-edit" data-id="${item.id}">取消</button>
+                            </div>
+                        `;
+                    } else {
+                        li.innerHTML = `
+                            <input type="checkbox" class="expense-checkbox" data-action="toggle-cover" data-id="${item.id}" ${item.covered ? 'checked' : ''} title="切换已覆盖状态">
+                            <div class="expense-info">
+                                <span class="expense-name">${escapeHtml(item.name)}</span>
+                                <span class="expense-amount-display">${formatCurrency(item.amount)}</span>
+                            </div>
+                            <div class="expense-actions">
+                                <button class="btn-icon edit" data-action="edit" data-id="${item.id}" title="编辑">✎</button>
+                                <button class="btn-icon danger" data-action="delete" data-id="${item.id}" title="删除">✕</button>
+                            </div>
+                        `;
+                    }
+                    expenseListEl.appendChild(li);
+                });
+
+                if (appData.expenseItems.length === 0) {
+                    const li = document.createElement('li');
+                    li.style.cssText = 'text-align:center;color:#555;padding:20px;font-size:0.85rem;';
+                    li.textContent = '暂无费用条目，请添加';
+                    expenseListEl.appendChild(li);
+                }
+            }
+
+            function renderLogList() {
+                logListEl.innerHTML = '';
+                const sortedRecords = [...appData.records].sort((a, b) => b.date.localeCompare(a.date));
+
+                if (sortedRecords.length === 0) {
+                    logEmptyEl.style.display = 'block';
+                } else {
+                    logEmptyEl.style.display = 'none';
+                    sortedRecords.forEach(record => {
+                        const li = document.createElement('li');
+                        li.className = 'log-item';
+                        li.innerHTML = `
+                            <span class="log-date">${formatDateDisplay(record.date)}</span>
+                            <span class="log-amount">+${formatCurrency(record.amount)}</span>
+                            <button class="log-delete" data-action="delete-record" data-date="${record.date}" title="删除此记录">✕</button>
+                        `;
+                        logListEl.appendChild(li);
+                    });
+                }
+            }
+
+            function renderBottomStats() {
+                const target = getTotalTarget();
+                const saved = getTotalSaved();
+                const remaining = getRemainingGap();
+                statTargetEl.textContent = formatCurrency(target);
+                statSavedEl.textContent = formatCurrency(saved);
+                statRemainingEl.textContent = formatCurrency(remaining);
+            }
+
+            function renderTodayHint() {
+                const todayRecord = getTodayRecord();
+                const dailyVal = dailyAmountInput.value.trim();
+                if (todayRecord && dailyVal) {
+                    const newAmount = parseInt(dailyVal);
+                    if (!isNaN(newAmount) && newAmount > 0 && newAmount !== todayRecord.amount) {
+                        todayHintEl.innerHTML = `
+                            <div class="today-hint">
+                                ⚠️ 今日已存 <strong>${formatCurrency(todayRecord.amount)}</strong>
+                                <span class="hint-actions">
+                                    <button class="overwrite-btn" id="btnOverwrite">覆盖为 ${formatCurrency(newAmount)}</button>
+                                    <button class="delete-today-btn" id="btnDeleteToday">删除今日记录</button>
+                                </span>
+                            </div>
+                        `;
+                        return;
+                    }
+                    if (todayRecord && !isNaN(newAmount) && newAmount === todayRecord.amount) {
+                        todayHintEl.innerHTML = `
+                            <div class="today-hint" style="border-left-color:#888;color:#aaa;">
+                                ✅ 今日已存入 <strong>${formatCurrency(todayRecord.amount)}</strong>（金额相同）
+                                <span class="hint-actions">
+                                    <button class="delete-today-btn" id="btnDeleteToday">删除今日记录</button>
+                                </span>
+                            </div>
+                        `;
+                        return;
+                    }
+                }
+                if (todayRecord && !dailyVal) {
+                    todayHintEl.innerHTML = `
+                        <div class="today-hint" style="border-left-color:#888;color:#aaa;">
+                            📌 今日已存入 <strong>${formatCurrency(todayRecord.amount)}</strong>
+                            <span class="hint-actions">
+                                <button class="delete-today-btn" id="btnDeleteToday">删除今日记录</button>
+                            </span>
+                        </div>
+                    `;
+                    return;
+                }
+                todayHintEl.innerHTML = '';
+            }
+
+            function updateCenterLabel() {
+                const saved = getTotalSaved();
+                centerSavedEl.textContent = formatCurrency(saved);
+            }
+
+            function escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            // ==================== 推背感动画 ====================
+            function triggerThrustAnimation() {
+                const randomText = THRUST_POOL[Math.floor(Math.random() * THRUST_POOL.length)];
+                const el = document.createElement('div');
+                el.className = 'thrust-overlay';
+                el.textContent = randomText;
+                thrustContainer.appendChild(el);
+
+                el.addEventListener('animationend', () => {
+                    el.remove();
+                });
+                setTimeout(() => {
+                    if (el.parentNode) el.remove();
+                }, 1200);
+            }
+
+            // ==================== 业务操作 ====================
+            function addRecord(amount) {
+                const today = getTodayStr();
+                const existingIndex = appData.records.findIndex(r => r.date === today);
+                if (existingIndex >= 0) {
+                    appData.records[existingIndex].amount = amount;
+                } else {
+                    appData.records.push({ date: today, amount });
+                }
+                appData.records.sort((a, b) => a.date.localeCompare(b.date));
+                saveData();
+                renderAll();
+                triggerThrustAnimation();
+                dailyAmountInput.value = '';
+            }
+
+            function deleteRecord(dateStr) {
+                appData.records = appData.records.filter(r => r.date !== dateStr);
+                saveData();
+                renderAll();
+                dailyAmountInput.value = '';
+            }
+
+            function toggleCoverExpense(id) {
+                const item = appData.expenseItems.find(it => it.id === id);
+                if (item) {
+                    item.covered = !item.covered;
+                    saveData();
+                    renderAll();
+                }
+            }
+
+            function deleteExpense(id) {
+                if (editingExpenseId === id) editingExpenseId = null;
+                appData.expenseItems = appData.expenseItems.filter(it => it.id !== id);
+                saveData();
+                renderAll();
+            }
+
+            function addExpense(name, amount) {
+                if (!name || amount <= 0) return;
+                appData.expenseItems.push({
+                    id: generateId(),
+                    name: name.trim(),
+                    amount: Math.round(amount),
+                    covered: false,
+                });
+                saveData();
+                renderAll();
+            }
+
+            function updateExpense(id, name, amount) {
+                const item = appData.expenseItems.find(it => it.id === id);
+                if (item) {
+                    item.name = name.trim();
+                    item.amount = Math.round(amount);
+                    editingExpenseId = null;
+                    saveData();
+                    renderAll();
+                }
+            }
+
+            // ==================== 计算器逻辑 ====================
+            function calcUpdateDisplay() {
+                let display = calcState.currentInput;
+                if (display === '' || display === '-') display = '0';
+                // 如果数字太长，缩小字体
+                if (display.replace('-', '').replace('.', '').length > 10) {
+                    calcDisplay.classList.add('shrink');
+                } else {
+                    calcDisplay.classList.remove('shrink');
+                }
+                calcDisplay.textContent = display;
+            }
+
+            function calcHandleDigit(value) {
+                if (calcState.shouldResetDisplay) {
+                    calcState.currentInput = value === '.' ? '0.' : value;
+                    calcState.shouldResetDisplay = false;
+                } else {
+                    if (value === '.') {
+                        if (calcState.currentInput.includes('.')) return;
+                        if (calcState.currentInput === '' || calcState.currentInput === '-') {
+                            calcState.currentInput += '0.';
+                            calcUpdateDisplay();
+                            return;
+                        }
+                        calcState.currentInput += '.';
+                    } else {
+                        if (calcState.currentInput === '0' && value !== '.') {
+                            calcState.currentInput = value;
+                        } else {
+                            // 限制位数防止溢出
+                            if (calcState.currentInput.replace('-', '').replace('.', '').length >= 15) return;
+                            calcState.currentInput += value;
+                        }
+                    }
+                }
+                calcState.lastAction = 'digit';
+                calcUpdateDisplay();
+            }
+
+            function calcHandleOperator(op) {
+                const current = parseFloat(calcState.currentInput);
+                if (isNaN(current)) return;
+
+                if (calcState.operator !== null && !calcState.shouldResetDisplay) {
+                    // 先计算结果
+                    calcHandleEquals();
+                }
+
+                calcState.previousInput = calcState.currentInput;
+                calcState.operator = op;
+                calcState.shouldResetDisplay = true;
+                calcState.lastAction = 'operator';
+                calcUpdateDisplay();
+            }
+
+            function calcHandleEquals() {
+                const current = parseFloat(calcState.currentInput);
+                if (isNaN(current)) return;
+
+                let result;
+                const prev = parseFloat(calcState.previousInput);
+
+                if (calcState.operator === null || isNaN(prev)) {
+                    calcState.previousInput = calcState.currentInput;
+                    calcState.shouldResetDisplay = true;
+                    calcState.lastAction = 'equals';
+                    calcUpdateDisplay();
+                    return;
+                }
+
+                switch (calcState.operator) {
+                    case '+':
+                        result = prev + current;
+                        break;
+                    case '-':
+                        result = prev - current;
+                        break;
+                    case '×':
+                        result = prev * current;
+                        break;
+                    case '÷':
+                        if (current === 0) {
+                            calcState.currentInput = 'Error';
+                            calcState.operator = null;
+                            calcState.previousInput = '';
+                            calcState.shouldResetDisplay = true;
+                            calcState.lastAction = 'equals';
+                            calcUpdateDisplay();
+                            return;
+                        }
+                        result = prev / current;
+                        break;
+                    default:
+                        result = current;
+                }
+
+                // 处理浮点精度
+                if (typeof result === 'number' && !Number.isInteger(result)) {
+                    result = parseFloat(result.toPrecision(12));
+                }
+
+                const resultStr = String(result);
+                if (resultStr.length > 20) {
+                    calcState.currentInput = result.toExponential(6);
+                } else {
+                    calcState.currentInput = resultStr;
+                }
+
+                calcState.operator = null;
+                calcState.previousInput = '';
+                calcState.shouldResetDisplay = true;
+                calcState.lastAction = 'equals';
+                calcUpdateDisplay();
+            }
+
+            function calcHandleClear() {
+                calcState.currentInput = '0';
+                calcState.previousInput = '';
+                calcState.operator = null;
+                calcState.shouldResetDisplay = false;
+                calcState.lastAction = 'clear';
+                calcDisplay.classList.remove('shrink');
+                calcUpdateDisplay();
+            }
+
+            function calcHandleBackspace() {
+                if (calcState.shouldResetDisplay) return;
+                if (calcState.currentInput.length <= 1 || (calcState.currentInput.length === 2 && calcState.currentInput
+                        .startsWith('-'))) {
+                    calcState.currentInput = '0';
+                } else {
+                    calcState.currentInput = calcState.currentInput.slice(0, -1);
+                }
+                calcUpdateDisplay();
+            }
+
+            // 键盘支持（计算器）
+            function calcHandleKey(key) {
+                if (key >= '0' && key <= '9') {
+                    calcHandleDigit(key);
+                } else if (key === '.') {
+                    calcHandleDigit('.');
+                } else if (key === '+') {
+                    calcHandleOperator('+');
+                } else if (key === '-') {
+                    calcHandleOperator('-');
+                } else if (key === '*') {
+                    calcHandleOperator('×');
+                } else if (key === '/') {
+                    calcHandleOperator('÷');
+                } else if (key === 'Enter' || key === '=') {
+                    calcHandleEquals();
+                } else if (key === 'Escape' || key === 'c' || key === 'C') {
+                    calcHandleClear();
+                } else if (key === 'Backspace') {
+                    calcHandleBackspace();
+                }
+            }
+
+            // ==================== 事件处理 ====================
+            // 确认记账
+            btnConfirmRecord.addEventListener('click', () => {
+                const rawVal = dailyAmountInput.value.trim();
+                const amount = parseInt(rawVal);
+                if (isNaN(amount) || amount <= 0) {
+                    dailyAmountInput.focus();
+                    dailyAmountInput.style.borderColor = '#ff4444';
+                    setTimeout(() => { dailyAmountInput.style.borderColor = '#444'; }, 1500);
+                    return;
+                }
+                const todayRecord = getTodayRecord();
+                if (todayRecord && todayRecord.amount === amount) {
+                    renderTodayHint();
+                    return;
+                }
+                if (todayRecord && todayRecord.amount !== amount) {
+                    renderTodayHint();
+                    return;
+                }
+                addRecord(amount);
+            });
+
+            dailyAmountInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    btnConfirmRecord.click();
+                }
+            });
+
+            // 委托事件：费用列表
+            expenseListEl.addEventListener('click', (e) => {
+                const target = e.target;
+                const action = target.getAttribute('data-action');
+                const id = target.getAttribute('data-id');
+
+                if (action === 'toggle-cover') {
+                    toggleCoverExpense(id);
+                } else if (action === 'delete') {
+                    if (confirm('确定要删除此费用条目吗？此操作不可恢复。')) {
+                        deleteExpense(id);
+                    }
+                } else if (action === 'edit') {
+                    editingExpenseId = id;
+                    renderExpenseList();
+                    setTimeout(() => {
+                        const nameInput = expenseListEl.querySelector('.edit-name-input');
+                        if (nameInput) nameInput.focus();
+                    }, 50);
+                } else if (action === 'save-edit') {
+                    const li = target.closest('.expense-item');
+                    const nameInput = li.querySelector('.edit-name-input');
+                    const amountInput = li.querySelector('.edit-amount-input');
+                    const newName = nameInput ? nameInput.value.trim() : '';
+                    const newAmount = amountInput ? parseInt(amountInput.value) : 0;
+                    if (!newName || isNaN(newAmount) || newAmount <= 0) {
+                        alert('请输入有效的名称和金额（金额需为正整数）');
+                        return;
+                    }
+                    updateExpense(id, newName, newAmount);
+                } else if (action === 'cancel-edit') {
+                    editingExpenseId = null;
+                    renderExpenseList();
+                }
+            });
+
+            // 委托事件：今日提示
+            todayHintEl.addEventListener('click', (e) => {
+                if (e.target.id === 'btnOverwrite') {
+                    const rawVal = dailyAmountInput.value.trim();
+                    const amount = parseInt(rawVal);
+                    if (!isNaN(amount) && amount > 0) {
+                        addRecord(amount);
+                    }
+                } else if (e.target.id === 'btnDeleteToday') {
+                    if (confirm('确定删除今日的记账记录吗？')) {
+                        deleteRecord(getTodayStr());
+                    }
+                }
+            });
+
+            // 委托事件：日志列表删除
+            logListEl.addEventListener('click', (e) => {
+                if (e.target.getAttribute('data-action') === 'delete-record') {
+                    const dateStr = e.target.getAttribute('data-date');
+                    if (dateStr && confirm('确定删除 ' + formatDateDisplay(dateStr) + ' 的记账记录吗？')) {
+                        deleteRecord(dateStr);
+                    }
+                }
+            });
+
+            // 新增费用条目
+            btnAddExpense.addEventListener('click', () => {
+                const name = newExpenseNameInput.value.trim();
+                const amount = parseInt(newExpenseAmountInput.value);
+                if (!name) {
+                    newExpenseNameInput.focus();
+                    newExpenseNameInput.style.borderColor = '#ff4444';
+                    setTimeout(() => { newExpenseNameInput.style.borderColor = '#444'; }, 1500);
+                    return;
+                }
+                if (isNaN(amount) || amount <= 0) {
+                    newExpenseAmountInput.focus();
+                    newExpenseAmountInput.style.borderColor = '#ff4444';
+                    setTimeout(() => { newExpenseAmountInput.style.borderColor = '#444'; }, 1500);
+                    return;
+                }
+                addExpense(name, amount);
+                newExpenseNameInput.value = '';
+                newExpenseAmountInput.value = '';
+                newExpenseNameInput.focus();
+            });
+            newExpenseNameInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') newExpenseAmountInput.focus();
+            });
+            newExpenseAmountInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') btnAddExpense.click();
+            });
+
+            dailyAmountInput.addEventListener('input', () => {
+                renderTodayHint();
+            });
+
+            // ===== 计算器事件 =====
+            document.querySelector('.calculator-buttons').addEventListener('click', (e) => {
+                const btn = e.target.closest('.calc-btn');
+                if (!btn) return;
+
+                const action = btn.getAttribute('data-action');
+                const value = btn.getAttribute('data-value');
+
+                if (action === 'digit') {
+                    calcHandleDigit(value);
+                } else if (action === 'operator') {
+                    calcHandleOperator(value);
+                } else if (action === 'equals') {
+                    calcHandleEquals();
+                } else if (action === 'clear') {
+                    calcHandleClear();
+                }
+            });
+
+            // 全局键盘支持（计算器 + 其他）
+            document.addEventListener('keydown', (e) => {
+                // 如果焦点在输入框中，不干扰
+                const tag = e.target.tagName;
+                if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+                const key = e.key;
+                // 计算器按键
+                if ((key >= '0' && key <= '9') || key === '.' || key === '+' || key === '-' || key === '*' || key ===
+                    '/' ||
+                    key === 'Enter' || key === '=' || key === 'Escape' || key === 'Backspace' ||
+                    key === 'c' || key === 'C') {
+                    e.preventDefault();
+                    calcHandleKey(key);
+                }
+            });
+
+            // ==================== 初始化 ====================
+            function init() {
+                loadData();
+                editingExpenseId = null;
+                const initProgress = getProgressPercent();
+                currentPointerAngle = progressToAngle(initProgress);
+                targetPointerAngle = currentPointerAngle;
+                pointerVelocity = 0;
+                drawGauge(currentPointerAngle);
+                renderAll();
+                updateGaugeTarget();
+
+                // 计算器初始显示
+                calcUpdateDisplay();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+            console.log('🏍️ 250SR-Dream-Dash 已就绪');
+            console.log('  春风250SR攒钱仪表盘 v1.1 (移除倒计时，新增计算器)');
+            console.log('  所有数据仅保存在本地浏览器存储中');
+            console.log('  祝早日提车！🎉');
+        })();
+    </script>
+</body>
+</html>
