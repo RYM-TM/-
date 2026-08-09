@@ -99,93 +99,36 @@
             max-width: 1100px;
             display: grid;
             grid-template-columns: 1fr 340px;
-            grid-template-rows: auto auto auto auto;
+            grid-template-rows: auto auto auto;
             gap: 18px;
             grid-template-areas:
-                "garage garage"
                 "gauge gauge"
                 "left right"
                 "bottom bottom";
-        }
-
-        /* ========== 车库切换栏 ========== */
-        .garage-bar {
-            grid-area: garage;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            padding: 8px 0;
-        }
-        .garage-btn {
-            padding: 8px 18px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text-dim);
-            cursor: pointer;
-            font-size: 0.82rem;
-            font-weight: 500;
-            transition: all var(--transition);
-            white-space: nowrap;
-        }
-        .garage-btn:hover {
-            border-color: #555;
-            color: #ddd;
-        }
-        .garage-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #fff;
-            box-shadow: 0 0 16px rgba(255, 107, 43, 0.35);
-            font-weight: 700;
-        }
-        .garage-btn .garage-badge {
-            font-size: 0.65rem;
-            margin-left: 4px;
-            opacity: 0.8;
-        }
-        .garage-add-btn {
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            border: 1px dashed #555;
-            background: transparent;
-            color: #888;
-            cursor: pointer;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all var(--transition);
-        }
-        .garage-add-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(255,107,43,0.08);
         }
 
         /* ========== 仪表盘区域 ========== */
         .gauge-section {
             grid-area: gauge;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 10px 0;
+            padding: 18px 0;
             position: relative;
+            overflow: visible;
         }
         .gauge-wrapper {
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: visible;
         }
         canvas#gaugeCanvas {
             display: block;
             width: 380px;
             height: 380px;
-            filter: drop-shadow(0 0 30px rgba(255, 107, 43, 0.25));
+            filter: drop-shadow(0 0 18px rgba(255, 107, 43, 0.2));
             transition: filter 0.5s ease;
         }
         .gauge-center-label {
@@ -742,47 +685,6 @@
             border: 1px solid #222;
         }
 
-        /* ===== 签到日历热力图 ===== */
-        .checkin-card {
-            grid-area: right;
-        }
-        .checkin-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
-            margin-top: 8px;
-        }
-        .checkin-day {
-            aspect-ratio: 1;
-            border-radius: 3px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            transition: all var(--transition);
-            font-size: 0.55rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #444;
-            cursor: default;
-        }
-        .checkin-day.checked {
-            background: var(--accent);
-            border-color: var(--accent-glow);
-            color: #fff;
-            box-shadow: 0 0 6px rgba(255, 107, 43, 0.3);
-        }
-        .checkin-day.today {
-            border-color: var(--yellow);
-            box-shadow: 0 0 8px rgba(255, 214, 0, 0.3);
-        }
-        .checkin-streak {
-            font-size: 0.7rem;
-            color: var(--accent);
-            text-align: center;
-            margin-top: 4px;
-            font-weight: 600;
-        }
-
         /* ========== 底部汇总栏 ========== */
         .bottom-bar {
             grid-area: bottom;
@@ -982,7 +884,6 @@
                 grid-template-columns: 1fr;
                 grid-template-rows: auto;
                 grid-template-areas:
-                    "garage"
                     "gauge"
                     "left"
                     "right"
@@ -998,8 +899,6 @@
             .log-list { max-height: 150px; }
             .calculator-display { font-size: 1.3rem; min-height: 48px; padding: 10px 14px; }
             .calc-btn { padding: 10px 0; font-size: 1rem; }
-            .checkin-grid { gap: 2px; }
-            .checkin-day { font-size: 0.45rem; }
         }
         @media (max-width: 400px) {
             canvas#gaugeCanvas { width: 220px; height: 220px; }
@@ -1017,11 +916,6 @@
     <a href="index.html" style="position:fixed;top:12px;left:16px;z-index:3000;color:#888;text-decoration:none;font-size:0.8rem;padding:6px 12px;border-radius:6px;border:1px solid #333;background:rgba(0,0,0,0.6);transition:all 0.2s;font-family:var(--font-sans);" onmouseover="this.style.color='#fff';this.style.borderColor='#666';" onmouseout="this.style.color='#888';this.style.borderColor='#333';">← 回忆馆</a>
 
     <div class="app-container">
-        <!-- 车库切换栏 -->
-        <section class="garage-bar" id="garageBar" role="tablist" aria-label="车型选择">
-            <!-- dynamically filled -->
-        </section>
-
         <!-- 仪表盘 -->
         <section class="gauge-section" aria-label="攒钱进度仪表盘">
             <div class="gauge-wrapper">
@@ -1098,13 +992,6 @@
                 </div>
             </div>
 
-            <!-- 签到日历 -->
-            <div class="card">
-                <div class="card-title">签到日历</div>
-                <div class="checkin-grid" id="checkinGrid" aria-label="签到日历热力图"></div>
-                <div class="checkin-streak" id="checkinStreak"></div>
-            </div>
-
             <!-- 记账日志 -->
             <div class="card">
                 <div class="card-title">记账日志</div>
@@ -1167,28 +1054,6 @@
         const GAUGE_END_ANGLE = (405 * Math.PI) / 180;
         const GAUGE_TOTAL_SPAN = GAUGE_END_ANGLE - GAUGE_START_ANGLE;
 
-        // ==================== 车库配置 ====================
-        const DEFAULT_GARAGES = [
-            { id: 'sr250', name: '250SR 基础版', items: [
-                { name: '裸车价（250SR）', amount: 19980 }, { name: '购置税', amount: 1768 },
-                { name: '交强险', amount: 400 }, { name: '上牌费', amount: 500 },
-                { name: '商业险', amount: 1200 }, { name: '头盔护具', amount: 2000 },
-                { name: '骑行装备', amount: 1500 }
-            ]},
-            { id: 'sr250sport', name: '250SR 竞技版', items: [
-                { name: '裸车价（竞技版）', amount: 22980 }, { name: '购置税', amount: 2034 },
-                { name: '交强险', amount: 400 }, { name: '上牌费', amount: 500 },
-                { name: '商业险', amount: 1500 }, { name: '全盔+护具', amount: 3500 },
-                { name: '赛道装备', amount: 3000 }, { name: '改装排气', amount: 2500 }
-            ]},
-            { id: 'sr450', name: '450SR', items: [
-                { name: '裸车价（450SR）', amount: 31980 }, { name: '购置税', amount: 2830 },
-                { name: '交强险', amount: 400 }, { name: '上牌费', amount: 500 },
-                { name: '商业险', amount: 2000 }, { name: '高端头盔', amount: 5000 },
-                { name: '骑行服全套', amount: 4000 }, { name: '改装预算', amount: 5000 }
-            ]}
-        ];
-
         // ==================== DOM引用 ====================
         const canvas = document.getElementById('gaugeCanvas');
         const ctx = canvas.getContext('2d');
@@ -1211,21 +1076,19 @@
         const newExpenseAmountInput = document.getElementById('newExpenseAmount');
         const expenseErrorEl = document.getElementById('expenseError');
         const calcDisplay = document.getElementById('calcDisplay');
-        const garageBar = document.getElementById('garageBar');
         const shareModal = document.getElementById('shareModal');
         const shareCanvas = document.getElementById('shareCanvas');
         const trendCanvas = document.getElementById('trendCanvas');
         const trendCtx = trendCanvas.getContext('2d');
-        const checkinGrid = document.getElementById('checkinGrid');
-        const checkinStreakEl = document.getElementById('checkinStreak');
         const targetDateInput = document.getElementById('targetDate');
         const toggleSoundBtn = document.getElementById('toggleSound');
         const toggleEngineBtn = document.getElementById('toggleEngine');
 
         // ==================== 数据状态 ====================
         let appData = {
-            garages: [], // [{id, name, expenseItems: [{id, name, amount, covered, image}], records: [{date, amount}], targetDate: null}]
-            activeGarageId: 'sr250',
+            expenseItems: [],
+            records: [],
+            targetDate: null,
             soundEnabled: true,
             engineEnabled: true,
         };
@@ -1272,12 +1135,11 @@
             return div.innerHTML;
         }
 
-        // ==================== 活跃车库数据访问 ====================
-        function activeGarage() { return appData.garages.find(g => g.id === appData.activeGarageId) || appData.garages[0]; }
-        function getExpenseItems() { return activeGarage().expenseItems || []; }
-        function getRecords() { return activeGarage().records || []; }
-        function getTargetDate() { return activeGarage().targetDate || null; }
-        function setTargetDate(val) { activeGarage().targetDate = val; saveData(); }
+        // ==================== 数据访问 ====================
+        function getExpenseItems() { return appData.expenseItems || []; }
+        function getRecords() { return appData.records || []; }
+        function getTargetDate() { return appData.targetDate || null; }
+        function setTargetDate(val) { appData.targetDate = val; saveData(); }
         function getTotalTarget() { return getExpenseItems().filter(it => !it.covered).reduce((s, it) => s + it.amount, 0); }
         function getTotalSaved() { return getRecords().reduce((s, r) => s + r.amount, 0); }
         function getProgressPercent() { const t = getTotalTarget(); if (t <= 0) return 1; return Math.min(getTotalSaved() / t, 1); }
@@ -1289,8 +1151,9 @@
         function saveData() {
             try {
                 const toSave = {
-                    garages: appData.garages,
-                    activeGarageId: appData.activeGarageId,
+                    expenseItems: appData.expenseItems,
+                    records: appData.records,
+                    targetDate: appData.targetDate,
                     soundEnabled: appData.soundEnabled,
                     engineEnabled: appData.engineEnabled,
                 };
@@ -1307,29 +1170,43 @@
                 const raw = localStorage.getItem(STORAGE_KEY);
                 if (raw) {
                     const parsed = JSON.parse(raw);
-                    appData.garages = parsed.garages || [];
-                    appData.activeGarageId = parsed.activeGarageId || 'sr250';
+                    // Support both old multi-garage format and new single format
+                    if (parsed.garages && Array.isArray(parsed.garages) && parsed.garages.length > 0) {
+                        const activeId = parsed.activeGarageId || parsed.garages[0].id;
+                        const activeG = parsed.garages.find(g => g.id === activeId) || parsed.garages[0];
+                        appData.expenseItems = (activeG.expenseItems || []).map(it => ({ ...it, id: it.id || generateId() }));
+                        appData.records = activeG.records || [];
+                        appData.targetDate = activeG.targetDate || null;
+                    } else {
+                        appData.expenseItems = (parsed.expenseItems || []).map(it => ({ ...it, id: it.id || generateId() }));
+                        appData.records = parsed.records || [];
+                        appData.targetDate = parsed.targetDate || null;
+                    }
                     appData.soundEnabled = parsed.soundEnabled !== false;
                     appData.engineEnabled = parsed.engineEnabled !== false;
-                    appData.garages.forEach(g => { g.expenseItems.forEach(it => { if (!it.id) it.id = generateId(); }); });
                 }
-                if (!appData.garages || appData.garages.length === 0) initDefaultData();
+                if (!appData.expenseItems || appData.expenseItems.length === 0) initDefaultData();
             } catch (e) {
                 console.warn('读取失败:', e);
                 initDefaultData();
             }
         }
         function initDefaultData() {
-            appData.garages = DEFAULT_GARAGES.map(g => ({
-                id: g.id, name: g.name,
-                expenseItems: g.items.map(it => ({ id: generateId(), name: it.name, amount: it.amount, covered: false, image: null })),
-                records: [], targetDate: null
-            }));
-            appData.activeGarageId = 'sr250';
+            appData.expenseItems = [
+                { id: generateId(), name: '裸车价（250SR）', amount: 19980, covered: false, image: null },
+                { id: generateId(), name: '购置税', amount: 1768, covered: false, image: null },
+                { id: generateId(), name: '交强险', amount: 400, covered: false, image: null },
+                { id: generateId(), name: '上牌费', amount: 500, covered: false, image: null },
+                { id: generateId(), name: '商业险', amount: 1200, covered: false, image: null },
+                { id: generateId(), name: '头盔护具', amount: 2000, covered: false, image: null },
+                { id: generateId(), name: '骑行装备', amount: 1500, covered: false, image: null },
+            ];
+            appData.records = [];
+            appData.targetDate = null;
             saveData();
         }
         function exportData() {
-            const blob = new Blob([JSON.stringify({ garages: appData.garages, activeGarageId: appData.activeGarageId }, null, 2)], { type: 'application/json' });
+            const blob = new Blob([JSON.stringify({ expenseItems: appData.expenseItems, records: appData.records, targetDate: appData.targetDate }, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a'); a.href = url; a.download = '250SR-攒钱备份-' + getTodayStr() + '.json'; a.click();
             URL.revokeObjectURL(url);
@@ -1343,14 +1220,23 @@
                 reader.onload = (ev) => {
                     try {
                         const data = JSON.parse(ev.target.result);
-                        if (data.garages && Array.isArray(data.garages)) {
-                            appData.garages = data.garages;
-                            appData.activeGarageId = data.activeGarageId || appData.garages[0]?.id || 'sr250';
-                            appData.garages.forEach(g => { g.expenseItems.forEach(it => { if (!it.id) it.id = generateId(); }); });
-                            saveData();
-                            onGarageSwitch();
-                            alert('✅ 数据导入成功！');
-                        } else { alert('❌ 文件格式不正确'); }
+                        // Support both old multi-garage and new single format
+                        if (data.garages && Array.isArray(data.garages) && data.garages.length > 0) {
+                            const activeId = data.activeGarageId || data.garages[0].id;
+                            const activeG = data.garages.find(g => g.id === activeId) || data.garages[0];
+                            appData.expenseItems = (activeG.expenseItems || []).map(it => ({ ...it, id: it.id || generateId() }));
+                            appData.records = activeG.records || [];
+                            appData.targetDate = activeG.targetDate || null;
+                        } else if (data.expenseItems) {
+                            appData.expenseItems = data.expenseItems.map(it => ({ ...it, id: it.id || generateId() }));
+                            appData.records = data.records || [];
+                            appData.targetDate = data.targetDate || null;
+                        } else {
+                            alert('❌ 文件格式不正确'); return;
+                        }
+                        saveData();
+                        refreshAll();
+                        alert('✅ 数据导入成功！');
                     } catch (err) { alert('❌ 文件解析失败: ' + err.message); }
                 };
                 reader.readAsText(file);
@@ -1647,11 +1533,9 @@
             const milestones = [0.25, 0.5, 0.75, 1.0];
             const labels = { 0.25: ['🏁 起步！', '已完成四分之一，继续加油！'], 0.5: ['🔥 半程！', '一半已在身后，坚持就是胜利！'],
                 0.75: ['💨 冲刺！', '胜利在望，春风250SR在向你招手！'], 1.0: ['🏆 圆梦！', '恭喜！你的250SR梦想已经实现！'] };
-            const gid = appData.activeGarageId;
-            if (!milestonesTriggered[gid]) milestonesTriggered[gid] = {};
             milestones.forEach(m => {
-                if (progress >= m && !milestonesTriggered[gid][m]) {
-                    milestonesTriggered[gid][m] = true;
+                if (progress >= m && !milestonesTriggered[m]) {
+                    milestonesTriggered[m] = true;
                     showAchievement(labels[m][0], labels[m][1]);
                     playMilestoneSound();
                 }
@@ -1694,49 +1578,15 @@
 
         // ==================== UI渲染 ====================
         function renderAll() {
-            renderGarageBar();
             renderExpenseList();
             renderLogList();
             renderTrendChart();
-            renderCheckinCalendar();
             renderBottomStats();
             renderTodayHint();
             renderCountdown();
             updateGaugeTarget();
             updateCenterLabel();
             checkMilestones();
-        }
-        function renderGarageBar() {
-            garageBar.innerHTML = '';
-            appData.garages.forEach(g => {
-                const btn = document.createElement('button');
-                btn.className = 'garage-btn' + (g.id === appData.activeGarageId ? ' active' : '');
-                btn.setAttribute('role', 'tab');
-                btn.setAttribute('aria-selected', g.id === appData.activeGarageId ? 'true' : 'false');
-                const progress = g.expenseItems ? (g.records || []).reduce((s, r) => s + r.amount, 0) / Math.max(1, g.expenseItems.filter(it => !it.covered).reduce((s, it) => s + it.amount, 0)) : 0;
-                btn.innerHTML = `${escapeHtml(g.name)} <span class="garage-badge">${Math.round(progress * 100)}%</span>`;
-                btn.addEventListener('click', () => {
-                    appData.activeGarageId = g.id;
-                    saveData();
-                    onGarageSwitch();
-                });
-                garageBar.appendChild(btn);
-            });
-            const addBtn = document.createElement('button');
-            addBtn.className = 'garage-add-btn';
-            addBtn.textContent = '+';
-            addBtn.title = '添加新车型';
-            addBtn.setAttribute('aria-label', '添加新车型');
-            addBtn.addEventListener('click', () => {
-                const name = prompt('请输入新车型名称：');
-                if (name && name.trim()) {
-                    appData.garages.push({ id: generateId(), name: name.trim(), expenseItems: [], records: [], targetDate: null });
-                    appData.activeGarageId = appData.garages[appData.garages.length - 1].id;
-                    saveData();
-                    onGarageSwitch();
-                }
-            });
-            garageBar.appendChild(addBtn);
         }
         function renderExpenseList() {
             expenseListEl.innerHTML = '';
@@ -1857,33 +1707,6 @@
             trendCtx.fillStyle = grad;
             trendCtx.fill();
         }
-        function renderCheckinCalendar() {
-            checkinGrid.innerHTML = '';
-            const today = new Date();
-            const records = getRecords();
-            const recordDates = new Set(records.map(r => r.date));
-            // Show last 28 days
-            for (let i = 27; i >= 0; i--) {
-                const d = new Date(today);
-                d.setDate(d.getDate() - i);
-                const dateStr = getDateStr(d);
-                const dayEl = document.createElement('div');
-                dayEl.className = 'checkin-day';
-                if (recordDates.has(dateStr)) dayEl.classList.add('checked');
-                if (i === 0) dayEl.classList.add('today');
-                dayEl.textContent = d.getDate();
-                dayEl.title = dateStr + (recordDates.has(dateStr) ? ' ✅' : '');
-                checkinGrid.appendChild(dayEl);
-            }
-            // Streak
-            let streak = 0;
-            const check = new Date(today);
-            while (recordDates.has(getDateStr(check))) {
-                streak++;
-                check.setDate(check.getDate() - 1);
-            }
-            checkinStreakEl.textContent = streak > 0 ? `🔥 连续签到 ${streak} 天` : '';
-        }
         function renderBottomStats() {
             const target = getTotalTarget();
             const saved = getTotalSaved();
@@ -1963,7 +1786,7 @@
             e.target.closest('.expense-item')?.classList.remove('drag-over');
             const targetIndex = parseInt(e.target.closest('.expense-item').getAttribute('data-index'));
             if (dragSrcIndex !== null && targetIndex !== null && dragSrcIndex !== targetIndex) {
-                const items = activeGarage().expenseItems;
+                const items = appData.expenseItems;
                 const [moved] = items.splice(dragSrcIndex, 1);
                 items.splice(targetIndex, 0, moved);
                 saveData();
@@ -2068,11 +1891,11 @@
             const today = getTodayStr();
             const existingIndex = getRecords().findIndex(r => r.date === today);
             if (existingIndex >= 0) {
-                activeGarage().records[existingIndex].amount = amount;
+                appData.records[existingIndex].amount = amount;
             } else {
-                activeGarage().records.push({ date: today, amount });
+                appData.records.push({ date: today, amount });
             }
-            activeGarage().records.sort((a, b) => a.date.localeCompare(b.date));
+            appData.records.sort((a, b) => a.date.localeCompare(b.date));
             saveData();
             renderAll();
             triggerThrustAnimation();
@@ -2081,7 +1904,7 @@
             dailyAmountInput.value = '';
         }
         function deleteRecord(dateStr) {
-            activeGarage().records = getRecords().filter(r => r.date !== dateStr);
+            appData.records = getRecords().filter(r => r.date !== dateStr);
             saveData();
             renderAll();
             playDeleteSound();
@@ -2093,12 +1916,12 @@
         }
         function deleteExpense(id) {
             if (editingExpenseId === id) editingExpenseId = null;
-            activeGarage().expenseItems = getExpenseItems().filter(it => it.id !== id);
+            appData.expenseItems = getExpenseItems().filter(it => it.id !== id);
             saveData(); renderAll(); playDeleteSound();
         }
         function addExpense(name, amount) {
             if (!name || amount <= 0) return;
-            activeGarage().expenseItems.push({ id: generateId(), name: name.trim(), amount: Math.round(amount), covered: false, image: null });
+            appData.expenseItems.push({ id: generateId(), name: name.trim(), amount: Math.round(amount), covered: false, image: null });
             saveData(); renderAll();
         }
         function updateExpense(id, name, amount) {
@@ -2231,8 +2054,8 @@
             else root.classList.add('theme-night');
         }
 
-        // ==================== 车库切换 ====================
-        function onGarageSwitch() {
+        // ==================== 初始化 ====================
+        function refreshAll() {
             editingExpenseId = null;
             const initProgress = getProgressPercent();
             currentPointerAngle = progressToAngle(initProgress);
@@ -2242,6 +2065,14 @@
             drawGauge(currentPointerAngle);
             renderAll();
             updateGaugeTarget();
+        }
+        function init() {
+            loadData();
+            updateTheme();
+            setInterval(updateTheme, 60000);
+            refreshAll();
+            calcUpdateDisplay();
+            console.log('🏍️ 250SR-Dream-Dash 已就绪');
         }
 
         // ==================== 事件处理 ====================
@@ -2385,17 +2216,6 @@
         // Init toggle states
         if (!appData.soundEnabled) { toggleSoundBtn.textContent = '🔇 音效'; toggleSoundBtn.classList.remove('on'); }
         if (!appData.engineEnabled) { toggleEngineBtn.textContent = '🔇 声浪'; toggleEngineBtn.classList.remove('on'); }
-
-        // ==================== 初始化 ====================
-        function init() {
-            loadData();
-            updateTheme();
-            setInterval(updateTheme, 60000); // Check theme every minute
-            onGarageSwitch();
-            calcUpdateDisplay();
-            console.log('🏍️ 250SR-Dream-Dash v2.0 已就绪');
-            console.log('  新增：多车型车库、HiDPI渲染、音效系统、里程碑成就、智能预测、签到日历、趋势图、分享卡片、时间主题、拖拽排序、配件图片、目标日期倒计时');
-        }
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
